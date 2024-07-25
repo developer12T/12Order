@@ -44,7 +44,7 @@
                 </ul>
             </nav>
         </div>
-        <router-link to="/logout"
+        <router-link to="#"
             class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-200"
             :class="{ 'justify-center': !isSidebarOpen }">
             <Icon icon="mdi:logout" class="h-6 w-6"></Icon>
@@ -61,12 +61,10 @@ import { useRoute } from 'vue-router'
 const isSidebarOpen = inject('isSidebarOpen')
 const toggleSidebar = inject('toggleSidebar')
 
-const logoSrc = ref('/public/logo-onetwo.png')
-const title = ref('12Order');
 const showText = ref(isSidebarOpen.value);
 const menuItems = ref([
     { name: 'หน้าหลัก', icon: 'mdi:home', link: '/', submenu: null },
-    { name: 'รายการขาย', icon: 'mdi:chart-bar', link: '#', submenu: null },
+    { name: 'รายการขาย', icon: 'mdi:cart', link: '/order', submenu: null },
     // {
     //     name: 'ร้านค้า',
     //     icon: 'mdi:store',

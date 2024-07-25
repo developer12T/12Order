@@ -24,9 +24,3 @@ provide('isSidebarOpen', isSidebarOpen)
 provide('toggleSidebar', toggleSidebar)
 
 </script>
-
-<!-- <style scoped>
-.transition-margin {
-    transition-property: margin-left;
-}
-</style> -->

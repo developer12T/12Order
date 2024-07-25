@@ -1,10 +1,10 @@
 import { createWebHistory, createRouter } from 'vue-router'
-import Main from '../views/Main.vue'
+import orderRoute from './modules/orderRoute.js'
 
 const routes = [
     { path: '/', component: () => import('../views/authentication/Login.vue') },
     { path: '/sidebar', component: () => import('../components/Sidebar.vue') },
-    { path: '/home', component: () => import('../views/Main.vue') },
+    { path: '/home', component: () => import('../views/Layout.vue') },
     // {
     //     path: '/',
     //     component: Main,
@@ -15,6 +15,7 @@ const routes = [
     //         },
     //     ]
     // }
+    ...orderRoute
 ]
 
 const router = createRouter({
