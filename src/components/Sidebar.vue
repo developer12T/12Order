@@ -66,19 +66,19 @@ const title = ref('12Order');
 const showText = ref(isSidebarOpen.value);
 const menuItems = ref([
     { name: 'หน้าหลัก', icon: 'mdi:home', link: '/', submenu: null },
-    { name: 'รายงาน', icon: 'mdi:chart-bar', link: '/รายงาน', submenu: null },
-    {
-        name: 'ร้านค้า',
-        icon: 'mdi:store',
-        link: '#',
-        submenu: [
-            { name: 'ร้านที่ 1', link: '/ร้านค้า/ร้านที่1' },
-            { name: 'ร้านที่ 2', link: '/ร้านค้า/ร้านที่2' }
-        ]
-    },
-    { name: 'สินค้า', icon: 'mdi:package-variant', link: '/สินค้า', submenu: null },
-    { name: 'โปรโมชั่น', icon: 'mdi:tag', link: '/โปรโมชั่น', submenu: null },
-    { name: 'ผู้ใช้งาน', icon: 'mdi:account', link: '/ผู้ใช้งาน', submenu: null }
+    { name: 'รายการขาย', icon: 'mdi:chart-bar', link: '#', submenu: null },
+    // {
+    //     name: 'ร้านค้า',
+    //     icon: 'mdi:store',
+    //     link: '#',
+    //     submenu: [
+    //         { name: 'ร้านที่ 1', link: '/ร้านค้า/ร้านที่1' },
+    //         { name: 'ร้านที่ 2', link: '/ร้านค้า/ร้านที่2' }
+    //     ]
+    // },
+    // { name: 'สินค้า', icon: 'mdi:package-variant', link: '/สินค้า', submenu: null },
+    // { name: 'โปรโมชั่น', icon: 'mdi:tag', link: '/โปรโมชั่น', submenu: null },
+    // { name: 'ผู้ใช้งาน', icon: 'mdi:account', link: '/ผู้ใช้งาน', submenu: null }
 ]);
 
 const openSubmenus = ref(new Set())
