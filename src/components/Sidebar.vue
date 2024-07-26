@@ -74,7 +74,7 @@ const menuItems = ref([
     //         { name: 'ร้านที่ 2', link: '/ร้านค้า/ร้านที่2' }
     //     ]
     // },
-    // { name: 'สินค้า', icon: 'mdi:package-variant', link: '/สินค้า', submenu: null },
+    { name: 'สต็อก', icon: 'fa-solid:warehouse', link: '#', submenu: null },
     // { name: 'โปรโมชั่น', icon: 'mdi:tag', link: '/โปรโมชั่น', submenu: null },
     // { name: 'ผู้ใช้งาน', icon: 'mdi:account', link: '/ผู้ใช้งาน', submenu: null }
 ]);

@@ -19,7 +19,6 @@ import { useRouter } from 'vue-router'
 import { useOrderStore } from '../../stores'
 import Tabs from '../../components/Tabs.vue'
 import Tables from '../../components/Tables.vue'
-import Breadcrumb from '../../components/Breadcrumb.vue'
 
 const router = useRouter()
 const order = useOrderStore()
@@ -35,12 +34,6 @@ const columns = ref([
     { key: 'address', label: 'ที่อยู่' },
     { key: 'area', label: 'เขต' },
     { key: 'totalPrice', label: 'รวม' }
-]);
-
-const breadcrumbs = ref([
-  { text: 'Home', link: '/' },
-  { text: 'Templates', link: '/templates' },
-  { text: 'Flowbite', link: '/flowbite' }
 ]);
 
 const handleSelectedRows = (selectedRows) => {

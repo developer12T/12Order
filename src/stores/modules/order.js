@@ -50,7 +50,7 @@ export const useOrderStore = defineStore('orders', {
           this.noData = true
           this.orderCmDetail = []
         } else {
-          this.orderCmDetail = response.data
+          this.orderCmDetail = response.data[0]
           this.orderCmItem = response.data[0].list
         }
         console.log('orderCmDetail', this.orderCmDetail)
