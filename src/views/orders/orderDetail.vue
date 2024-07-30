@@ -20,7 +20,7 @@
         </div>
     </div>
     <div>
-        <Tables :columns="columns" :data="itemData" :checkbox="false" />
+        <Tables :columns="columns" :data="itemData" @update:selected="handleSelectedRows" />
     </div>
 </template>
 
@@ -49,6 +49,10 @@ const columns = ref([
     { key: 'itemDiscount', label: 'ส่วนลด' },
     { key: 'summaryPrice', label: 'รวม' }
 ]);
+
+const handleSelectedRows = (selectedRows) => {
+    console.log('Selected Rows:', selectedRows);
+};
 
 onMounted(() => {
     order.getOrderCmDetail(util.orderNo);
