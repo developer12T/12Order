@@ -62,5 +62,23 @@ export const useOrderStore = defineStore('orders', {
         this.isLoading = false
       }
     },
+    async addOrderErp(order) {
+      this.isLoading = true
+      this.error = null
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_ERP_BASE_URL + '/createOrder',
+          {
+            order
+          }
+        )
+        console.log('addOrder', response.data)
+      } catch (error) {
+        this.error = error.message || 'Error fetching orders'
+        console.error(error);
+      } finally {
+        this.isLoading = false
+      }
+    },
   }
 })

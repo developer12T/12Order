@@ -20,7 +20,7 @@
         </div>
     </div>
     <div>
-        <Tables :columns="columns" :data="itemData" @update:selected="handleSelectedRows" />
+        <Tables :columns="columns" :data="itemData" @update:selected="handleSelectedRows" :checkbox="false" />
     </div>
 </template>
 
