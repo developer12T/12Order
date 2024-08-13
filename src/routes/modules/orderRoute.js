@@ -21,6 +21,11 @@ const orderRoutes = [
                 path: 'detail',
                 component: () => import('../../views/orders/orderDetail.vue'),
                 meta: { breadcrumb: 'รายละเอียด' }
+            },
+            {
+                path: 'summary',
+                component: () => import('../../views/orders/orderSummary.vue'),
+                meta: { breadcrumb: 'ใบสั่งจอง' }
             }
         ],
     },

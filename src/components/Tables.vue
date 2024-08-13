@@ -16,7 +16,21 @@
                     </th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="loading">
+                <tr v-for="n in 5" :key="n">
+                  <td v-for="(column, index) in columns" :key="index" class="text-center py-2">
+                    <Skeleton width="70%" height="0.8rem" />
+                  </td>
+                </tr>
+              </tbody>
+              <tbody v-else-if="data.status === 204 || data.length === 0">
+                <tr>
+                  <td :colspan="columns.length" class="text-center py-4 text-gray-500">
+                    <span> ไม่มีข้อมูล </span>
+                  </td>
+                </tr>
+              </tbody>
+            <tbody v-else>
                 <tr v-for="(row, index) in data" :key="index"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
                     >
@@ -38,7 +52,8 @@
 </template>
 
 <script setup>
-import { ref, watch, defineProps, defineEmits } from 'vue';
+import { ref, watch, defineProps, defineEmits } from 'vue'
+import Skeleton from '../components/Skeleton.vue'
 
 const props = defineProps({
     columns: {
@@ -52,7 +67,8 @@ const props = defineProps({
     checkbox: {
         type: Boolean,
         default: true
-    }
+    },
+    loading: Boolean,
 });
 
 const emits = defineEmits(['update:selected', 'row:clicked']);

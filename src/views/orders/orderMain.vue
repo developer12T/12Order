@@ -1,7 +1,11 @@
 <template>
     <div>
         <div class="flex flex-row justify-end">
-            <button @click="handleAdd(selectedRows)" type="button" :disabled="isAdding"
+            <button @click="handleSummary(selectedRows)" type="button" :disabled="isAdding"
+                class="bg-blue-500 hover:bg-blue-600 mr-2 text-white border border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
+                ใบสั่งจอง
+            </button>
+            <button @click="handleAdd(selectedRows)" type="button" 
                 class="bg-green-500 hover:bg-green-600 mr-2 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
                 นำเข้าระบบ
             </button>
@@ -33,12 +37,13 @@
 import { ref, onMounted, computed } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useRouter } from 'vue-router'
-import { useOrderStore } from '../../stores'
+import { useOrderStore, useUtilityStore } from '../../stores'
 import Tabs from '../../components/Tabs.vue'
 import Tables from '../../components/Tables.vue'
 
 const router = useRouter()
 const order = useOrderStore()
+const util = useUtilityStore()
 const orderData = computed(() => {
     return order.orderCm;
 });
@@ -60,10 +65,12 @@ const handleSelectedRows = (rows) => {
     selectedRows.value = rows;
 };
 
+
 const handleRowClicked = async (orderNo) => {
     console.log('Clicked:', orderNo)
-    localStorage.setItem('orderNo', orderNo)
+    util.orderNo = orderNo;
     await router.push('/order/detail')
+    order.getOrderCmDetail(orderNo)
 }
 
 const handleAdd = async () => {
@@ -78,6 +85,15 @@ const handleAdd = async () => {
     } finally {
         isAdding.value = false
         order.getOrderCm()
+    }
+}
+
+const handleSummary = async () => {
+    try {
+        order.setSummaryOrders(selectedRows.value)
+        await router.push('/order/summary')
+    } catch (error) {
+        console.error(error)
     }
 }
 

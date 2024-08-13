@@ -1,6 +1,4 @@
-import {
-  defineStore
-} from 'pinia'
+import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useOrderStore = defineStore('orders', {
@@ -11,6 +9,8 @@ export const useOrderStore = defineStore('orders', {
     orderCm: [],
     orderCmDetail: [],
     orderCmItem: [],
+    setSummary:[],
+    orderSummary: [],
   }),
   actions: {
     async getOrderCm() {
@@ -80,5 +80,27 @@ export const useOrderStore = defineStore('orders', {
         this.isLoading = false
       }
     },
-  }
+    setSummaryOrders(order) {
+      this.setSummary = order
+      console.log('set', this.setSummary)
+    },
+    async summaryOrder() {
+      this.isLoading = true
+      this.error = null
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_BASE_URL + '/summaryOrder',
+          this.setSummary
+        )
+        this.orderSummary = response.data
+        console.log('summary', response.data)
+      } catch (error) {
+        this.error = error.message || 'Error fetching orders'
+        console.error(error);
+      } finally {
+        this.isLoading = false
+      }
+    },
+  },
+  persist: true 
 })
