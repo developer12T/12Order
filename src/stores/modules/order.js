@@ -100,6 +100,7 @@ export const useOrderStore = defineStore('orders', {
         )
         this.orderSummary = response.data
         console.log('summary', response.data)
+        console.log('summary2', this.orderSummary)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
         console.error(error);
@@ -107,16 +108,17 @@ export const useOrderStore = defineStore('orders', {
         this.isLoading = false
       }
     },
-    async summaryOrderAll() {
+    async summaryOrderAll(order) {
       this.isLoading = true
       this.error = null
       try {
         const response = await axios.post(
           import.meta.env.VITE_API_BASE_URL + '/summaryAll',
-          this.setSummaryAll
+          order
         )
-        this.orderSummaryAll = response
-        // console.log('summary', response.data)
+        this.orderSummaryAll = response.data
+        console.log('summaryAll', response.data)
+        console.log('summaryAll2', this.orderSummaryAll)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
         console.error(error);

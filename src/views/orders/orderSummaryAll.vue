@@ -4,51 +4,12 @@
     </div>
     <div class="a4-pages">
         <div class="print-icon-container">
-            <Icon @click="printPage" icon="noto-v1:printer" height='30' width='30'/>
+            <Icon @click="printPage" icon="noto-v1:printer" height='30' width='30' />
         </div>
-        <div v-for="(order, index) in summaryOrders" :key="index" class="a4-page">
+        <div v-for="(pageItems, pageIndex) in paginatedSummaryOrders" :key="pageIndex" class="a4-page">
             <div class="header">
                 <h1>(ใบรวมสินค้า)</h1>
             </div>
-            <!-- <div class="flex flex-row justify-between mt-2">
-                <div class="info-column">
-                    <div class="aligned-item">
-                        <p class="label"><strong>ชื่อลูกค้า</strong></p>
-                        <p>{{ order.storeId }} {{ order.storeName }}</p>
-                    </div>
-                    <div class="aligned-item">
-                        <p class="label"><strong>ที่อยู่ลูกค้า</strong></p>
-                        <p>{{ order.address }}</p>
-                    </div>
-                    <div class="aligned-item">
-                        <p class="label"><strong>สถานที่ส่ง</strong></p>
-                        <p>{{ order.address }}</p>
-                    </div>
-                    <div class="aligned-item">
-                        <p class="label"><strong>เบอร์โทร</strong></p>
-                        <p>{{ order.tel }}</p>
-                    </div>
-                    <div class="aligned-item">
-                        <p class="label"><strong>หมายเหตุ</strong></p>
-                        <p>{{ order.note || '' }}</p>
-                    </div>
-                </div>
-                <div class="info-column">
-                    <div class="aligned-item">
-                        <p class="label"><strong>เลขที่เอกสาร</strong></p>
-                        <p>{{ order.orderNo }}</p>
-                    </div>
-                    <div class="aligned-item">
-                        <p class="label"><strong>วันที่เอกสาร</strong></p>
-                        <p>{{ order.createDate }}</p>
-                    </div>
-                    <div class="aligned-item">
-                        <p class="label"><strong>พนักงานขาย</strong></p>
-                        <p>{{ order.saleCode }} {{ order.saleMan }}</p>
-                    </div>
-                </div>
-            </div> -->
-
             <table class="order-table mt-4">
                 <thead>
                     <tr>
@@ -60,21 +21,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in order" :key="item.id">
-                        {{ item }}
-                        <!-- <td>{{ item.id }}</td>
-                        <td>{{ item.name }}</td> -->
-                        <!-- <td>{{ item.convertedUnits.CTN.qty }}</td>
+                    <tr v-for="item in pageItems" :key="item.id">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.convertedUnits.CTN.qty }}</td>
                         <td>{{ item.convertedUnits.BAG.qty }}</td>
-                        <td>{{ item.convertedUnits.PCS.qty }}</td> -->
+                        <td>{{ item.convertedUnits.PCS.qty }}</td>
                     </tr>
-                    <!-- <tr v-for="i in (16  - order.list.length)" :key="'empty-' + i">
+                    <tr v-for="i in (23 - pageItems.length)" :key="'empty-' + i">
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
-                    </tr> -->
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -82,13 +42,23 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
-import { useOrderStore } from '../../stores'
+import { useOrderStore, useUtilityStore } from '../../stores'
 import Breadcrumb from '../../components/Breadcrumb.vue'
 
 const order = useOrderStore()
+const util = useUtilityStore()
 const summaryOrders = computed(() => order.orderSummaryAll)
+
+const paginatedSummaryOrders = computed(() => {
+    const itemsPerPage = 23
+    const pages = []
+    for (let i = 0; i < summaryOrders.value.length; i += itemsPerPage) {
+        pages.push(summaryOrders.value.slice(i, i + itemsPerPage))
+    }
+    return pages
+})
 
 const printPage = () => {
     const printContent = document.querySelector('.a4-pages').innerHTML;
@@ -100,8 +70,8 @@ const printPage = () => {
 }
 
 onMounted(() => {
-    order.summaryOrderAll()
-    console.log('all', summaryOrders.value)
+    order.summaryOrderAll(util.summaryAll)
+    console.log('all', summaryOrders)
 })
 </script>
 
@@ -131,31 +101,11 @@ onMounted(() => {
 }
 
 .header h1 {
-    font-size: 28px;
+    font-size: 20px;
     font-weight: bold;
     margin: 0;
     text-transform: uppercase;
     color: #333;
-}
-
-.info-column {
-    display: flex;
-    flex-direction: column;
-
-}
-
-.aligned-item {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 1px; 
-}
-
-.label {
-    width: 100px; 
-    flex-shrink: 0; 
-    text-align: left; 
-    margin-right: 1px; 
-    font-weight: bold;
 }
 
 .order-table {
@@ -181,12 +131,6 @@ onMounted(() => {
     background-color: #fff;
 }
 
-p {
-    margin: 0 0 5px;
-    line-height: 1.6;
-    font-size: 14px;
-}
-
 .print-icon-container {
     display: flex;
     justify-content: flex-end;
@@ -209,20 +153,4 @@ p {
         padding: 0;
     }
 }
-
-@media print {
-    .print-icon-container {
-        display: none;
-    }
-
-    @page {
-        margin: 0;
-    }
-
-    body {
-        margin: 0;
-        padding: 0;
-    }
-}
-
 </style>

@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="flex flex-row justify-end">
-            <button @click="handleSummary(selectedRows)" type="button" :disabled="isAdding"
+            <button @click="handleSummary(selectedRows)" type="button" :disabled="isLoading"
                 class="bg-blue-500 hover:bg-blue-600 mr-2 text-white border border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
                 ใบสั่งจอง
             </button>
-            <button @click="handleSummaryAll(selectedRows)" type="button" :disabled="isAdding"
+            <button @click="handleSummaryAll(selectedRows)" type="button" :disabled="isLoading"
                 class="bg-blue-500 hover:bg-blue-600 mr-2 text-white border border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
                 ใบรวมสินค้า
             </button>
@@ -19,7 +19,7 @@
                 <div v-if="activeTab === 0">
                     <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
                         @row:clicked="handleRowClicked" />
-                    <div v-if="isAdding"
+                    <div v-if="isLoading"
                         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
                         <div class="relative p-6">
                             <Icon class="icon w-12 h-12" icon="line-md:loading-twotone-loop" />
@@ -63,7 +63,7 @@ const columns = ref([
 ]);
 
 const selectedRows = ref([])
-const isAdding = ref(false)
+const isLoading = ref(false)
 
 const handleSelectedRows = (rows) => {
     selectedRows.value = rows;
@@ -78,7 +78,7 @@ const handleRowClicked = async (orderNo) => {
 }
 
 const handleAdd = async () => {
-    isAdding.value = true
+    isLoading.value = true
     console.log('add', selectedRows.value)
     try {
         await order.addOrderErp(
@@ -87,7 +87,7 @@ const handleAdd = async () => {
     } catch (error) {
         console.error(error)
     } finally {
-        isAdding.value = false
+        isLoading.value = false
         order.getOrderCm()
     }
 }
@@ -102,11 +102,16 @@ const handleSummary = async () => {
 }
 
 const handleSummaryAll = async () => {
+    isLoading.value = true
     try {
-        order.setSummaryOrdersAll(selectedRows.value)
-        await router.push('/order/summaryAll')
+        util.summaryAll = selectedRows.value
+        await order.summaryOrderAll(selectedRows.value)
+        console.log(util.summaryAll)
     } catch (error) {
         console.error(error)
+    } finally {
+        isLoading.value = false
+        await router.push('/order/summaryAll')
     }
 }
 
