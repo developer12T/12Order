@@ -1,4 +1,7 @@
 <template>
+    <div class="mb-5">
+        <Breadcrumb />
+    </div>
     <div class="a4-pages">
         <div class="print-icon-container">
             <Icon @click="printPage" icon="noto-v1:printer" height='30' width='30'/>
@@ -81,6 +84,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useOrderStore } from '../../stores'
+import Breadcrumb from '../../components/Breadcrumb.vue'
 
 const order = useOrderStore()
 const summaryOrders = computed(() => order.orderSummary)
@@ -185,7 +189,7 @@ p {
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    padding-right: 40px;
+    padding-right: 5px;
     margin-bottom: 10px;
 }
 
@@ -209,7 +213,6 @@ p {
         display: none;
     }
 
-    /* ซ่อนเวลาที่มุมซ้ายบนของหน้า */
     @page {
         margin: 0;
     }
