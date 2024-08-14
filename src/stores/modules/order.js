@@ -10,7 +10,9 @@ export const useOrderStore = defineStore('orders', {
     orderCmDetail: [],
     orderCmItem: [],
     setSummary:[],
-    orderSummary: [],
+    setSummaryAll:[],
+    orderSummary: [], 
+    orderSummaryAll: [], 
   }),
   actions: {
     async getOrderCm() {
@@ -84,6 +86,10 @@ export const useOrderStore = defineStore('orders', {
       this.setSummary = order
       console.log('set', this.setSummary)
     },
+    setSummaryOrdersAll(order) {
+      this.setSummaryAll = order
+      console.log('set', this.setSummaryAll)
+    },
     async summaryOrder() {
       this.isLoading = true
       this.error = null
@@ -94,6 +100,23 @@ export const useOrderStore = defineStore('orders', {
         )
         this.orderSummary = response.data
         console.log('summary', response.data)
+      } catch (error) {
+        this.error = error.message || 'Error fetching orders'
+        console.error(error);
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async summaryOrderAll() {
+      this.isLoading = true
+      this.error = null
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_BASE_URL + '/summaryAll',
+          this.setSummaryAll
+        )
+        this.orderSummaryAll = response
+        // console.log('summary', response.data)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
         console.error(error);
