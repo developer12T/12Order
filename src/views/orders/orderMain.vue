@@ -9,22 +9,30 @@
                 class="bg-blue-500 hover:bg-blue-600 mr-2 text-white border border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
                 ใบรวมสินค้า
             </button>
-            <button @click="handleAdd(selectedRows)" type="button" 
+            <button @click="handleConfirm(selectedRows)" type="button"
                 class="bg-green-500 hover:bg-green-600 mr-2 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
                 นำเข้าระบบ
             </button>
         </div>
         <Tabs :tabs="tabs">
             <template #default="{ activeTab }">
+                <div v-if="isLoading"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
+                    <div class="relative p-6">
+                        <Icon class="icon w-12 h-12" icon="line-md:loading-twotone-loop" />
+                    </div>
+                </div>
+                <Alert :isVisible="showConfirm" message="ต้องการนำเข้าระบบ?"
+                    confirmText="ยืนยัน" cancelText="ยกเลิก" icon="vaadin:add-dock"
+                    @confirm="handleAdd" @close="showConfirm = false" 
+                />
+                <Alert :isVisible="showSuceess" message="นำเข้าระบบสำเร็จ"
+                    confirmText="Yes, delete it" cancelText="No, keep it" icon="mdi:delete-outline"
+                    @confirm="handleSuccess" @close="showSuceess = false" 
+                />
                 <div v-if="activeTab === 0">
                     <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
                         @row:clicked="handleRowClicked" />
-                    <div v-if="isLoading"
-                        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
-                        <div class="relative p-6">
-                            <Icon class="icon w-12 h-12" icon="line-md:loading-twotone-loop" />
-                        </div>
-                    </div>
                 </div>
                 <div v-if="activeTab === 1">
                     ยังไม่มีข้อมูล
@@ -44,13 +52,17 @@ import { useRouter } from 'vue-router'
 import { useOrderStore, useUtilityStore } from '../../stores'
 import Tabs from '../../components/Tabs.vue'
 import Tables from '../../components/Tables.vue'
+import Alert from '../../components/Alert.vue'
 
 const router = useRouter()
 const order = useOrderStore()
 const util = useUtilityStore()
-const orderData = computed(() => {
-    return order.orderCm;
-});
+const orderData = computed(() => order.orderCm)
+
+const showConfirm = ref(false)
+const showSuceess = ref(false)
+const selectedRows = ref([])
+const isLoading = ref(false)
 
 const tabs = ref([{ name: 'รายการขาย' }, { name: 'ค้างส่ง' }, { name: 'ประวัติ' }]);
 const columns = ref([
@@ -60,15 +72,11 @@ const columns = ref([
     { key: 'address', label: 'ที่อยู่' },
     { key: 'area', label: 'เขต' },
     { key: 'totalPrice', label: 'รวม' }
-]);
-
-const selectedRows = ref([])
-const isLoading = ref(false)
+])
 
 const handleSelectedRows = (rows) => {
-    selectedRows.value = rows;
-};
-
+    selectedRows.value = rows
+}
 
 const handleRowClicked = async (orderNo) => {
     console.log('Clicked:', orderNo)
@@ -77,27 +85,46 @@ const handleRowClicked = async (orderNo) => {
     order.getOrderCmDetail(orderNo)
 }
 
+const handleConfirm = () => {
+  console.log('Confirmed!')
+//   showConfirm.value = false
+//   handleAdd(selectedRows.value)
+  showConfirm.value = true
+  
+}
+
+const handleSuccess = () => {
+  console.log('Success!')
+  showSuceess.value = true
+  
+}
+
 const handleAdd = async () => {
     isLoading.value = true
-    console.log('add', selectedRows.value)
     try {
-        await order.addOrderErp(
-            selectedRows.value
-        )
+        // await order.addOrderErp(
+        //     selectedRows.value
+        // )
+        console.log('add',selectedRows.value)
     } catch (error) {
         console.error(error)
     } finally {
         isLoading.value = false
-        order.getOrderCm()
+        // order.getOrderCm()
     }
 }
 
 const handleSummary = async () => {
+    isLoading.value = true
     try {
-        order.setSummaryOrders(selectedRows.value)
-        await router.push('/order/summary')
+        util.summary = selectedRows.value
+        await order.summaryOrder(selectedRows.value)
+        console.log(util.summary)
     } catch (error) {
         console.error(error)
+    } finally {
+        isLoading.value = false
+        await router.push('/order/summary')
     }
 }
 

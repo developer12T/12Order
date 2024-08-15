@@ -9,8 +9,6 @@ export const useOrderStore = defineStore('orders', {
     orderCm: [],
     orderCmDetail: [],
     orderCmItem: [],
-    setSummary:[],
-    setSummaryAll:[],
     orderSummary: [], 
     orderSummaryAll: [], 
   }),
@@ -82,21 +80,13 @@ export const useOrderStore = defineStore('orders', {
         this.isLoading = false
       }
     },
-    setSummaryOrders(order) {
-      this.setSummary = order
-      console.log('set', this.setSummary)
-    },
-    setSummaryOrdersAll(order) {
-      this.setSummaryAll = order
-      console.log('set', this.setSummaryAll)
-    },
-    async summaryOrder() {
+    async summaryOrder(order) {
       this.isLoading = true
       this.error = null
       try {
         const response = await axios.post(
           import.meta.env.VITE_API_BASE_URL + '/summaryOrder',
-          this.setSummary
+          order
         )
         this.orderSummary = response.data
         console.log('summary', response.data)

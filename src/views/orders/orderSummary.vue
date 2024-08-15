@@ -83,10 +83,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
-import { useOrderStore } from '../../stores'
+import { useOrderStore, useUtilityStore } from '../../stores'
 import Breadcrumb from '../../components/Breadcrumb.vue'
 
 const order = useOrderStore()
+const util = useUtilityStore()
 const summaryOrders = computed(() => order.orderSummary)
 
 const printPage = () => {
@@ -99,7 +100,7 @@ const printPage = () => {
 }
 
 onMounted(() => {
-    order.summaryOrder()
+    order.summaryOrder(util.summary)
 })
 </script>
 

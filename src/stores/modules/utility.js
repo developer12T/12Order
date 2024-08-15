@@ -5,6 +5,7 @@ export const useUtilityStore = defineStore('utility', {
     searchText: '',
     searchData: [],
     orderNo: localStorage.getItem('orderNo'),
+    summary: localStorage.getItem('summary'),
     summaryAll: localStorage.getItem('summaryAll')
   }),
   getters: {
