@@ -24,9 +24,9 @@
                     <tr v-for="item in pageItems" :key="item.id">
                         <td>{{ item.id }}</td>
                         <td>{{ item.name }}</td>
-                        <td>{{ item.convertedUnits.CTN.qty }}</td>
-                        <td>{{ item.convertedUnits.BAG.qty }}</td>
-                        <td>{{ item.convertedUnits.PCS.qty }}</td>
+                        <td>{{ item.convertedUnits.large.qty }}</td>
+                        <td>{{ item.convertedUnits.medium.qty }}</td>
+                        <td>{{ item.convertedUnits.small.qty }}</td>
                     </tr>
                     <tr v-for="i in (23 - pageItems.length)" :key="'empty-' + i">
                         <td>&nbsp;</td>

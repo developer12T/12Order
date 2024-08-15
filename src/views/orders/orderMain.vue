@@ -1,20 +1,29 @@
 <template>
     <div>
         <div class="flex flex-row justify-end">
-            <button @click="handleSummary(selectedRows)" type="button" :disabled="isLoading"
-                class="bg-blue-500 hover:bg-blue-600 mr-2 text-white border border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
-                ใบสั่งจอง
+            <button @click="handleSummary(selectedRows)" type="button" :disabled="!selectedRows.length" 
+            :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+                {
+                    'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                }]"> ใบจอง
             </button>
-            <button @click="handleSummaryAll(selectedRows)" type="button" :disabled="isLoading"
-                class="bg-blue-500 hover:bg-blue-600 mr-2 text-white border border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
-                ใบรวมสินค้า
+            <button @click="handleSummaryAll(selectedRows)" type="button" :disabled="!selectedRows.length"
+                :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+                {
+                    'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                }]"> ใบรวม
             </button>
-            <button @click="handleConfirm(selectedRows)" type="button"
-                class="bg-green-500 hover:bg-green-600 mr-2 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
-                นำเข้าระบบ
+            <button v-if="activeTab === 0" @click="handleConfirm(selectedRows)" type="button" :disabled="!selectedRows.length"
+                :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+                {
+                    'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                }]"> นำเข้าระบบ
             </button>
         </div>
-        <Tabs :tabs="tabs">
+        <Tabs :tabs="tabs" v-model="activeTab">
             <template #default="{ activeTab }">
                 <div v-if="isLoading"
                     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
@@ -22,17 +31,16 @@
                         <Icon class="icon w-12 h-12" icon="line-md:loading-twotone-loop" />
                     </div>
                 </div>
-                <Alert :isVisible="showConfirm" message="ต้องการนำเข้าระบบ?"
-                    confirmText="ยืนยัน" cancelText="ยกเลิก" icon="vaadin:add-dock"
-                    @confirm="handleAdd" @close="showConfirm = false" 
-                />
-                <Alert :isVisible="showSuceess" message="นำเข้าระบบสำเร็จ"
-                    confirmText="Yes, delete it" cancelText="No, keep it" icon="mdi:delete-outline"
-                    @confirm="handleSuccess" @close="showSuceess = false" 
-                />
+                <Alert :isVisible="showConfirm" message="ต้องการนำเข้าระบบ?" confirmText="ยืนยัน" cancelText="ยกเลิก"
+                    icon="line-md:downloading-loop" style="color: #787373" @confirm="handleAdd"
+                    @close="showConfirm = false" />
+
+                <Alert :isVisible="showSuccess" message="นำเข้าระบบสำเร็จ" icon="ep:success-filled"
+                    style="color: #14c257" :confirmButton="false" :cancelButton="false" @close="showSuccess = false" />
+
                 <div v-if="activeTab === 0">
                     <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
-                        @row:clicked="handleRowClicked" />
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" />
                 </div>
                 <div v-if="activeTab === 1">
                     ยังไม่มีข้อมูล
@@ -46,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watchEffect } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useRouter } from 'vue-router'
 import { useOrderStore, useUtilityStore } from '../../stores'
@@ -57,14 +65,16 @@ import Alert from '../../components/Alert.vue'
 const router = useRouter()
 const order = useOrderStore()
 const util = useUtilityStore()
+
 const orderData = computed(() => order.orderCm)
 
+const activeTab = ref(0)
 const showConfirm = ref(false)
-const showSuceess = ref(false)
+const showSuccess = ref(false)
 const selectedRows = ref([])
 const isLoading = ref(false)
-
-const tabs = ref([{ name: 'รายการขาย' }, { name: 'ค้างส่ง' }, { name: 'ประวัติ' }]);
+const resetSelected = ref(false)
+const tabs = ref([{ name: 'รายการขาย' }, { name: 'ค้างส่ง' }, { name: 'ประวัติ' }])
 const columns = ref([
     { key: 'createDate', label: 'วันที่' },
     { key: 'orderNo', label: 'บิล' },
@@ -76,6 +86,7 @@ const columns = ref([
 
 const handleSelectedRows = (rows) => {
     selectedRows.value = rows
+    console.log('Selected Rows:', selectedRows.value)
 }
 
 const handleRowClicked = async (orderNo) => {
@@ -86,32 +97,32 @@ const handleRowClicked = async (orderNo) => {
 }
 
 const handleConfirm = () => {
-  console.log('Confirmed!')
-//   showConfirm.value = false
-//   handleAdd(selectedRows.value)
-  showConfirm.value = true
-  
+    console.log('Confirmed!')
+    showConfirm.value = true
 }
 
 const handleSuccess = () => {
-  console.log('Success!')
-  showSuceess.value = true
-  
+    console.log('Success!')
+    showSuccess.value = true
 }
 
 const handleAdd = async () => {
+    showConfirm.value = false
     isLoading.value = true
     try {
-        // await order.addOrderErp(
-        //     selectedRows.value
-        // )
-        console.log('add',selectedRows.value)
+        await order.addOrderErp(
+            selectedRows.value
+        )
+        selectedRows.value = []
+        console.log('add', selectedRows.value)
     } catch (error) {
         console.error(error)
     } finally {
         isLoading.value = false
-        // order.getOrderCm()
-        selectedRows.value = ''
+        handleSuccess()
+        order.getOrderCm()
+        resetSelected.value = true
+        console.log('valueSelected', selectedRows.value)
     }
 }
 
@@ -143,8 +154,14 @@ const handleSummaryAll = async () => {
     }
 }
 
+watchEffect(() => {
+    if (!isLoading.value) {
+        selectedRows.value = []
+    }
+})
+
 onMounted(() => {
-    order.getOrderCm();
+    order.getOrderCm()
 })
 
 </script>
