@@ -111,6 +111,7 @@ const handleAdd = async () => {
     } finally {
         isLoading.value = false
         // order.getOrderCm()
+        selectedRows.value = ''
     }
 }
 
