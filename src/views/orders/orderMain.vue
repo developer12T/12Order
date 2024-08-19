@@ -1,26 +1,33 @@
 <template>
     <div>
         <div class="flex flex-row justify-end">
-            <button @click="handleSummary(selectedRows)" type="button" :disabled="!selectedRows.length" 
-            :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+            <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummary(selectedRows)" type="button"
+                :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
                 {
                     'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
                     'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
                 }]"> ใบจอง
             </button>
-            <button @click="handleSummaryAll(selectedRows)" type="button" :disabled="!selectedRows.length"
-                :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+            <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummaryAll(selectedRows)" type="button"
+                :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
                 {
                     'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
                     'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
                 }]"> ใบรวม
             </button>
-            <button v-if="activeTab === 0" @click="handleConfirm(selectedRows)" type="button" :disabled="!selectedRows.length"
-                :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+            <button v-if="activeTab === 0" @click="handleConfirm1(selectedRows)" type="button"
+                :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+                {
+                    'bg-blue-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                }]"> เพิ่มรายการ
+            </button>
+            <button v-if="activeTab === 1" @click="handleConfirm2(selectedRows)" type="button"
+                :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
                 {
                     'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
                     'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                }]"> นำเข้าระบบ
+                }]"> เข้าระบบ
             </button>
         </div>
         <Tabs :tabs="tabs" v-model="activeTab">
@@ -31,22 +38,35 @@
                         <Icon class="icon w-12 h-12" icon="line-md:loading-twotone-loop" />
                     </div>
                 </div>
-                <Alert :isVisible="showConfirm" message="ต้องการนำเข้าระบบ?" confirmText="ยืนยัน" cancelText="ยกเลิก"
+                <Alert :isVisible="showConfirm1" message="ต้องการเพิ่มรายการ?" confirmText="ยืนยัน" cancelText="ยกเลิก"
                     icon="line-md:downloading-loop" style="color: #787373" @confirm="handleAdd"
-                    @close="showConfirm = false" />
+                    @close="showConfirm1 = false" />
 
-                <Alert :isVisible="showSuccess" message="นำเข้าระบบสำเร็จ" icon="ep:success-filled"
+                <Alert :isVisible="showConfirm2" message="ต้องการเพิ่มรายการเข้า M3?" confirmText="ยืนยัน" cancelText="ยกเลิก"
+                    icon="line-md:downloading-loop" style="color: #787373" @confirm="handleAddErp"
+                    @close="showConfirm2 = false" />
+
+                <Alert :isVisible="showSuccess" message="เพิ่มสำเร็จ" icon="ep:success-filled"
                     style="color: #14c257" :confirmButton="false" :cancelButton="false" @close="showSuccess = false" />
+
+                <Alert :isVisible="showFail" message="เกิดข้อผิดพลาด" icon="line-md:alert-circle-loop"
+                    style="color: #ba1212" :confirmButton="false" :cancelButton="false" @close="showFail = false" />
 
                 <div v-if="activeTab === 0">
                     <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
                         :resetSelected="resetSelected" @row:clicked="handleRowClicked" />
                 </div>
                 <div v-if="activeTab === 1">
-                    ยังไม่มีข้อมูล
+                    <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" />
                 </div>
                 <div v-if="activeTab === 2">
-                    ยังไม่มีข้อมูล
+                    <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" />
+                </div>
+                <div v-if="activeTab === 3">
+                    <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" />
                 </div>
             </template>
         </Tabs>
@@ -54,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watchEffect } from 'vue'
+import { ref, onMounted, computed, watch, watchEffect } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useRouter } from 'vue-router'
 import { useOrderStore, useUtilityStore } from '../../stores'
@@ -69,12 +89,15 @@ const util = useUtilityStore()
 const orderData = computed(() => order.orderCm)
 
 const activeTab = ref(0)
-const showConfirm = ref(false)
+const status = ref(10)
+const showConfirm1 = ref(false)
+const showConfirm2 = ref(false)
 const showSuccess = ref(false)
+const showFail = ref(false)
 const selectedRows = ref([])
 const isLoading = ref(false)
 const resetSelected = ref(false)
-const tabs = ref([{ name: 'รายการขาย' }, { name: 'ค้างส่ง' }, { name: 'ประวัติ' }])
+const tabs = ref([{ name: 'รายการขาย' }, { name: 'รอเข้าระบบ' }, { name: 'ค้างส่ง' }, { name: 'ประวัติ' }])
 const columns = ref([
     { key: 'createDate', label: 'วันที่' },
     { key: 'orderNo', label: 'บิล' },
@@ -96,9 +119,14 @@ const handleRowClicked = async (orderNo) => {
     order.getOrderCmDetail(orderNo)
 }
 
-const handleConfirm = () => {
+const handleConfirm1 = () => {
     console.log('Confirmed!')
-    showConfirm.value = true
+    showConfirm1.value = true
+}
+
+const handleConfirm2 = () => {
+    console.log('Confirmed!')
+    showConfirm2.value = true
 }
 
 const handleSuccess = () => {
@@ -106,25 +134,56 @@ const handleSuccess = () => {
     showSuccess.value = true
 }
 
+const handleFail = () => {
+    console.log('Failed!')
+    showFail.value = true
+}
+
 const handleAdd = async () => {
-    showConfirm.value = false
+    showConfirm1.value = false
     isLoading.value = true
     try {
-        await order.addOrderErp(
+        await order.addOrder(
             selectedRows.value
         )
         selectedRows.value = []
         console.log('add', selectedRows.value)
+        handleSuccess()
     } catch (error) {
         console.error(error)
+        handleFail()
     } finally {
         isLoading.value = false
-        handleSuccess()
-        order.getOrderCm()
+        order.getOrderCm(status.value)
         resetSelected.value = true
         console.log('valueSelected', selectedRows.value)
     }
 }
+
+const handleAddErp = async () => {
+    showConfirm2.value = false
+    isLoading.value = true
+    try {
+        await order.addOrderERP(
+            selectedRows.value.map((item) => {
+                return {
+                    orderNo: item.orderNo
+                }
+            })
+        )
+        selectedRows.value = []
+        handleSuccess()
+    } catch (error) {
+        console.error(error)
+        handleFail()
+    } finally {
+        isLoading.value = false
+        order.getOrderCm(status.value)
+        resetSelected.value = true
+        console.log('valueSelected', selectedRows.value)
+    }
+}
+
 
 const handleSummary = async () => {
     isLoading.value = true
@@ -160,8 +219,27 @@ watchEffect(() => {
     }
 })
 
+watch(activeTab, (newTab) => {
+    switch (newTab) {
+        case 0:
+            status.value = 10
+            break
+        case 1:
+            status.value = 15
+            break
+        case 2:
+            status.value = 20
+            break
+        case 3:
+            status.value = 30
+            break
+        default:
+            status.value = 10
+    }
+    order.getOrderCm(status.value)
+})
 onMounted(() => {
-    order.getOrderCm()
+    order.getOrderCm(status.value)
 })
 
 </script>

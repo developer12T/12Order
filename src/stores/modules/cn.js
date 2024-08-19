@@ -17,7 +17,7 @@ export const useCnStore = defineStore('cn', {
       this.noData = false
       try {
         const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL + '/cn/getCnOrderCm'
+          import.meta.env.VITE_API_BASE_URL + '/cn/getCnOrderCm',
         )
         if (response.status === 204) {
           this.noData = true

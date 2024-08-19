@@ -9,18 +9,18 @@ export const useOrderStore = defineStore('orders', {
     orderCm: [],
     orderCmDetail: [],
     orderCmItem: [],
-    orderSummary: [], 
-    orderSummaryAll: [], 
+    orderSummary: [],
+    orderSummaryAll: [],
   }),
   actions: {
-    async getOrderCm() {
+    async getOrderCm(status) {
       this.isLoading = true
       this.error = null
       this.noData = false
       try {
-        const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL + '/sale/getOrderCm'
-        )
+        const response = await axios.get(import.meta.env.VITE_API_BASE_URL + '/sale/getOrderCm', {
+          params: { status }
+        })
         if (response.status === 204) {
           this.noData = true
           this.orderCm = []
@@ -62,20 +62,42 @@ export const useOrderStore = defineStore('orders', {
         this.isLoading = false
       }
     },
-    async addOrderErp(order) {
+    async addOrder(order) {
       this.isLoading = true
       this.error = null
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_ERP_BASE_URL + '/sale/createOrder',
+          import.meta.env.VITE_API_ERP_BASE_URL + '/sale/addOrder',
           {
             order
           }
         )
         console.log('addOrder', response.data)
+        return response.data
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
         console.error(error)
+        throw error
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async addOrderERP(order) {
+      this.isLoading = true
+      this.error = null
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_ERP_BASE_URL + '/sale/addOrderErp',
+          {
+            order
+          }
+        )
+        console.log('addOrderERP', response.data)
+        return response.data
+      } catch (error) {
+        this.error = error.message || 'Error fetching orders'
+        console.error(error)
+        throw error
       } finally {
         this.isLoading = false
       }
