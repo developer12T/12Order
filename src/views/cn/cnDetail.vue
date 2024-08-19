@@ -8,12 +8,12 @@
                 <Skeleton v-for="i in 6" :key="i" width="100%" height="0.8rem" class="mb-2" />
             </div>
             <div v-else class="flex flex-col text-sm">
-                <span>เลข {{ orderData.orderNo }} </span>
-                <span>รหัส {{ orderData.code }} | ร้านค้า {{ orderData.name }}</span>
-                <span>ที่อยู่ {{ orderData.address }}</span>
-                <span>เบอร์โทร {{ orderData.tel }}</span>
-                <span>เลขผู้เสียภาษี {{ orderData.tax }}</span>
-                <span>พนักงานขาย {{ orderData.saleMan }}</span>
+                <span>เลข {{ cnData.orderNo }} </span>
+                <span>รหัส {{ cnData.code }} | ร้านค้า {{ cnData.name }}</span>
+                <span>ที่อยู่ {{ cnData.address }}</span>
+                <span>เบอร์โทร {{ cnData.tel }}</span>
+                <span>เลขผู้เสียภาษี {{ cnData.tax }}</span>
+                <span>พนักงานขาย {{ cnData.saleMan }}</span>
             </div>
         </div>
         <div class="flex-1 max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
@@ -29,25 +29,24 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
-import { useOrderStore, useUtilityStore } from '../../stores'
+import { useCnStore, useUtilityStore } from '../../stores'
 import Tables from '../../components/Tables.vue'
 import Breadcrumb from '../../components/Breadcrumb.vue'
 import Skeleton from '../../components/Skeleton.vue'
 
-const order = useOrderStore()
+const cn = useCnStore()
 const util = useUtilityStore()
 
 const loading = ref(true)
 
-const itemData = computed(() => order.orderCmItem)
-const orderData = computed(() => order.orderCmDetail)
+const itemData = computed(() => cn.orderCnCmItem)
+const cnData = computed(() => cn.orderCnCmDetail)
 
 const columns = ref([
     { key: 'id', label: 'รหัส' },
     { key: 'name', label: 'สินค้า' },
     { key: 'qtyText', label: 'จำนวน' },
     { key: 'pricePerQty', label: 'ราคาต่อหน่วย' },
-    { key: 'itemDiscount', label: 'ส่วนลด' },
     { key: 'summaryPrice', label: 'รวม' }
 ]);
 
@@ -57,7 +56,7 @@ const handleSelectedRows = (selectedRows) => {
 
 onMounted(async () => {
     try {
-        await order.getOrderCmDetail(util.orderNo)
+        await cn.getCnOrderCmDetail(util.cnNo)
     } finally {
         loading.value = false
     }

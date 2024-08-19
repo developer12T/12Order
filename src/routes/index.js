@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import orderRoute from './modules/orderRoute.js'
+import cnRoute from './modules/cnRoute.js'
 
 const routes = [
     { path: '/', component: () => import('../views/authentication/Login.vue') },
@@ -15,7 +16,8 @@ const routes = [
     //         },
     //     ]
     // }
-    ...orderRoute
+    ...orderRoute,
+    ...cnRoute
 ]
 
 const router = createRouter({

@@ -19,8 +19,8 @@ export const useOrderStore = defineStore('orders', {
       this.noData = false
       try {
         const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL + '/getOrderCm'
-        );
+          import.meta.env.VITE_API_BASE_URL + '/sale/getOrderCm'
+        )
         if (response.status === 204) {
           this.noData = true
           this.orderCm = []
@@ -30,7 +30,7 @@ export const useOrderStore = defineStore('orders', {
         console.log('orderCm', this.orderCm)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
-        console.error(error);
+        console.error(error)
       } finally {
         this.isLoading = false
       }
@@ -41,7 +41,7 @@ export const useOrderStore = defineStore('orders', {
       this.noData = false
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_BASE_URL + '/getOrderCmDetail',
+          import.meta.env.VITE_API_BASE_URL + '/sale/getOrderCmDetail',
           {
             orderNo
           }
@@ -57,7 +57,7 @@ export const useOrderStore = defineStore('orders', {
         console.log('item', this.orderCmItem)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
-        console.error(error);
+        console.error(error)
       } finally {
         this.isLoading = false
       }
@@ -67,7 +67,7 @@ export const useOrderStore = defineStore('orders', {
       this.error = null
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_ERP_BASE_URL + '/createOrder',
+          import.meta.env.VITE_API_ERP_BASE_URL + '/sale/createOrder',
           {
             order
           }
@@ -75,7 +75,7 @@ export const useOrderStore = defineStore('orders', {
         console.log('addOrder', response.data)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
-        console.error(error);
+        console.error(error)
       } finally {
         this.isLoading = false
       }
@@ -85,7 +85,7 @@ export const useOrderStore = defineStore('orders', {
       this.error = null
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_BASE_URL + '/summaryOrder',
+          import.meta.env.VITE_API_BASE_URL + '/sale/summaryOrder',
           order
         )
         this.orderSummary = response.data
@@ -93,7 +93,7 @@ export const useOrderStore = defineStore('orders', {
         console.log('summary2', this.orderSummary)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
-        console.error(error);
+        console.error(error)
       } finally {
         this.isLoading = false
       }
@@ -103,7 +103,7 @@ export const useOrderStore = defineStore('orders', {
       this.error = null
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_BASE_URL + '/summaryAll',
+          import.meta.env.VITE_API_BASE_URL + '/sale/summaryAll',
           order
         )
         this.orderSummaryAll = response.data
@@ -111,11 +111,10 @@ export const useOrderStore = defineStore('orders', {
         console.log('summaryAll2', this.orderSummaryAll)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
-        console.error(error);
+        console.error(error)
       } finally {
         this.isLoading = false
       }
     },
   },
-  persist: true 
 })

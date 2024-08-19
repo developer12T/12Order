@@ -65,6 +65,7 @@ const showText = ref(isSidebarOpen.value);
 const menuItems = ref([
     { name: 'หน้าหลัก', icon: 'mdi:home', link: '/home', submenu: null },
     { name: 'รายการขาย', icon: 'mdi:cart', link: '/order', submenu: null },
+    { name: 'รายการคืน', icon: 'mdi:cart-off', link: '/cn', submenu: null },
     // {
     //     name: 'ร้านค้า',
     //     icon: 'mdi:store',
