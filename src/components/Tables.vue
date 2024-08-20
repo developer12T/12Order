@@ -18,6 +18,8 @@
             </thead>
             <tbody v-if="loading">
                 <tr v-for="n in 5" :key="n">
+                    <td v-if="checkbox" class="w-4 p-4">
+                    </td>
                     <td v-for="(column, index) in columns" :key="index" class="text-center py-2">
                         <Skeleton width="70%" height="0.8rem" />
                     </td>

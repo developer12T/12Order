@@ -54,19 +54,19 @@
 
                 <div v-if="activeTab === 0">
                     <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
-                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" />
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
                 </div>
                 <div v-if="activeTab === 1">
                     <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
-                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" />
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
                 </div>
                 <div v-if="activeTab === 2">
                     <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
-                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" />
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
                 </div>
                 <div v-if="activeTab === 3">
                     <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
-                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" />
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
                 </div>
             </template>
         </Tabs>
@@ -96,8 +96,9 @@ const showSuccess = ref(false)
 const showFail = ref(false)
 const selectedRows = ref([])
 const isLoading = ref(false)
+const loading = ref(true)
 const resetSelected = ref(false)
-const tabs = ref([{ name: 'รายการขาย' }, { name: 'รอเข้าระบบ' }, { name: 'ค้างส่ง' }, { name: 'ประวัติ' }])
+const tabs = ref([{ name: 'รายการขาย' }, { name: 'รอเข้าระบบ' }, { name: 'รอส่ง' }, { name: 'ประวัติ' }])
 const columns = ref([
     { key: 'createDate', label: 'วันที่' },
     { key: 'orderNo', label: 'บิล' },
@@ -219,27 +220,44 @@ watchEffect(() => {
     }
 })
 
-watch(activeTab, (newTab) => {
-    switch (newTab) {
-        case 0:
-            status.value = 10
-            break
-        case 1:
-            status.value = 15
-            break
-        case 2:
-            status.value = 20
-            break
-        case 3:
-            status.value = 30
-            break
-        default:
-            status.value = 10
+watch(activeTab, async (newTab) => {
+    loading.value = true;
+    try {
+        switch (newTab) {
+            case 0:
+                status.value = 10
+                break
+            case 1:
+                status.value = 15
+                break
+            case 2:
+                status.value = 20
+                break
+            case 3:
+                status.value = 30
+                break
+            default:
+                status.value = 10
+        }
+        await order.getOrderCm(status.value)
+    } catch (error) {
+        console.error("Error fetching data:", error)
+        handleFail()
+    } finally {
+        loading.value = false
     }
-    order.getOrderCm(status.value)
 })
-onMounted(() => {
-    order.getOrderCm(status.value)
+
+onMounted(async () => {
+    loading.value = true
+    try {
+        await order.getOrderCm(status.value)
+    } catch (error) {
+        console.error("Error on mounted:", error)
+        handleFail()
+    } finally {
+        loading.value = false
+    }
 })
 
 </script>

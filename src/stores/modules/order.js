@@ -26,11 +26,13 @@ export const useOrderStore = defineStore('orders', {
           this.orderCm = []
         } else {
           this.orderCm = response.data
+          return response.data
         }
         console.log('orderCm', this.orderCm)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
         console.error(error)
+        throw error
       } finally {
         this.isLoading = false
       }
