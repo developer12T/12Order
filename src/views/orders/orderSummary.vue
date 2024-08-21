@@ -74,6 +74,12 @@
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                     </tr>
+                    <tr>
+                        <td colspan="2" class="text-center font-bold">รวมทั้งหมด</td>
+                        <td>{{ order.totalList.large }}</td>
+                        <td>{{ order.totalList.medium }}</td>
+                        <td>{{ order.totalList.small }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>

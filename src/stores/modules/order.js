@@ -10,7 +10,10 @@ export const useOrderStore = defineStore('orders', {
     orderCmDetail: [],
     orderCmItem: [],
     orderSummary: [],
-    orderSummaryAll: [],
+    orderSummaryAll: {
+      list: [],
+      totalList: {}
+  }
   }),
   actions: {
     async getOrderCm(status) {

@@ -42,9 +42,15 @@
                             <label :for="'checkbox-' + index" class="sr-only">checkbox</label>
                         </div>
                     </td>
-                    <td v-for="(column, colIndex) in columns" :key="colIndex" class="px-6 py-4"
+                    <!-- <td v-for="(column, colIndex) in columns" :key="colIndex" class="px-6 py-4"
                         @click="rowClicked(row)">
                         {{ row[column.key] }}
+                    </td> -->
+                    <td v-for="(column, colIndex) in columns" :key="colIndex" class="px-6 py-4"
+                        @click="rowClicked(row)">
+                        <slot name="cell" :column="column" :row="row">
+                            {{ row[column.key] }}
+                        </slot>
                     </td>
                 </tr>
             </tbody>

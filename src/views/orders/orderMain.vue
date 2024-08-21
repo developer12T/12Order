@@ -53,8 +53,18 @@
                     style="color: #ba1212" :confirmButton="false" :cancelButton="false" @close="showFail = false" />
 
                 <div v-if="activeTab === 0">
-                    <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
-                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
+                    <Tables :columns="columnsList" :data="orderData" @update:selected="handleSelectedRows"
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading">
+                        <template #cell="{ column, row }">
+                            <span v-if="column.key === 'send'">
+                                <span v-if="!row.send" class="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">ไม่พร้อมส่ง</span>
+                                <span v-else class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">พร้อมส่ง</span>
+                            </span>
+                            <span v-else>
+                                {{ row[column.key] }}
+                            </span>
+                        </template>
+                    </Tables>
                 </div>
                 <div v-if="activeTab === 1">
                     <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
@@ -99,13 +109,21 @@ const isLoading = ref(false)
 const loading = ref(true)
 const resetSelected = ref(false)
 const tabs = ref([{ name: 'รายการขาย' }, { name: 'รอเข้าระบบ' }, { name: 'รอส่ง' }, { name: 'ประวัติ' }])
-const columns = ref([
+const columnsList = ref([
     { key: 'createDate', label: 'วันที่' },
     { key: 'orderNo', label: 'บิล' },
     { key: 'storeName', label: 'ร้าน' },
     { key: 'address', label: 'ที่อยู่' },
     { key: 'area', label: 'เขต' },
-    { key: 'totalPrice', label: 'รวม' }
+    { key: 'send', label: 'สถานะ' }
+])
+
+const columns = ref([
+    { key: 'createDate', label: 'วันที่' },
+    { key: 'orderNo', label: 'บิล' },
+    { key: 'storeName', label: 'ร้าน' },
+    { key: 'address', label: 'ที่อยู่' },
+    { key: 'area', label: 'เขต' }
 ])
 
 const handleSelectedRows = (rows) => {

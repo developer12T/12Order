@@ -35,6 +35,12 @@
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                     </tr>
+                    <tr>
+                        <td colspan="2" class="text-center font-bold">รวมทั้งหมด</td>
+                        <td>{{ totalList.large }}</td>
+                        <td>{{ totalList.medium }}</td>
+                        <td>{{ totalList.small }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -49,13 +55,14 @@ import Breadcrumb from '../../components/Breadcrumb.vue'
 
 const order = useOrderStore()
 const util = useUtilityStore()
-const summaryOrders = computed(() => order.orderSummaryAll)
+const list = computed(() => order.orderSummaryAll.list)
+const totalList = computed(() => order.orderSummaryAll.totalList)
 
 const paginatedSummaryOrders = computed(() => {
     const itemsPerPage = 23
     const pages = []
-    for (let i = 0; i < summaryOrders.value.length; i += itemsPerPage) {
-        pages.push(summaryOrders.value.slice(i, i + itemsPerPage))
+    for (let i = 0; i < list.value.length; i += itemsPerPage) {
+        pages.push(list.value.slice(i, i + itemsPerPage))
     }
     return pages
 })
@@ -71,7 +78,7 @@ const printPage = () => {
 
 onMounted(() => {
     order.summaryOrderAll(util.summaryAll)
-    console.log('all', summaryOrders)
+    console.log('all', list)
 })
 </script>
 
