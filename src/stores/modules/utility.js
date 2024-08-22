@@ -11,7 +11,7 @@ export const useUtilityStore = defineStore('utility', {
   }),
   getters: {
     filteredData(state) {
-      const search = state.searchText.toLowerCase();
+      const search = state.searchText ? state.searchText.toLowerCase() : ''
       if (!search) {
         return state.searchData
       }

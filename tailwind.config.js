@@ -6,13 +6,15 @@ module.exports = {
   ],
   theme: {
     screens: {
-      sm: '360px',
-      md: '600px',
-      lg: '976px',
-      xl: '1440px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
     },
     fontFamily: {
       kanit: ["Kanit", "sans-serif"],
+      sarabun: ["Sarabun", "sans-serif"],
     },
     extend: {},
   },

@@ -1,36 +1,53 @@
 <template>
     <div>
-        <div class="flex flex-row justify-end">
-            <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummary(selectedRows)" type="button"
-                :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                {
-                    'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                }]"> ใบจอง
-            </button>
-            <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummaryAll(selectedRows)" type="button"
-                :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                {
-                    'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                }]"> ใบรวม
-            </button>
-            <button v-if="activeTab === 0" @click="handleConfirm1(selectedRows)" type="button"
-                :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                {
-                    'bg-blue-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                }]"> เพิ่มรายการ
-            </button>
-            <button v-if="activeTab === 1" @click="handleConfirm2(selectedRows)" type="button"
-                :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                {
-                    'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                }]"> เข้าระบบ
-            </button>
-        </div>
-        <Tabs :tabs="tabs" v-model="activeTab">
+        <Tabs :tabs="tabsWithCounts" v-model="activeTab">
+            <template #search>
+                <div class="px-4">
+                    <Search />
+                </div>
+            </template>
+            <template #buttons>
+                <div>
+                    <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummary(selectedRows)" type="button"
+                        :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+                    {
+                        'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                    }]">
+                        ใบจอง
+                        <span v-if="selectedRows.length"
+                            class="inline-flex items-center justify-center min-w-[1.5rem] h-4 px-2 ms-1 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+                            {{ selectedRows.length }}
+                        </span>
+                    </button>
+                    <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummaryAll(selectedRows)" type="button"
+                        :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+                    {
+                        'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                    }]">
+                        ใบรวม
+                        <span v-if="selectedRows.length"
+                            class="inline-flex items-center justify-center min-w-[1.5rem] h-4 px-2 ms-1 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+                            {{ selectedRows.length }}
+                        </span>
+                    </button>
+                    <button v-if="activeTab === 0" @click="handleConfirm1(selectedRows)" type="button"
+                        :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+                    {
+                        'bg-blue-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                    }]"> เพิ่มรายการ
+                    </button>
+                    <button v-if="activeTab === 1" @click="handleConfirm2(selectedRows)" type="button"
+                        :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+                    {
+                        'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                    }]"> เข้าระบบ
+                    </button>
+                </div>
+            </template>
             <template #default="{ activeTab }">
                 <div v-if="isLoading"
                     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
@@ -42,23 +59,25 @@
                     icon="line-md:downloading-loop" style="color: #787373" @confirm="handleAdd"
                     @close="showConfirm1 = false" />
 
-                <Alert :isVisible="showConfirm2" message="ต้องการเพิ่มรายการเข้า M3?" confirmText="ยืนยัน" cancelText="ยกเลิก"
-                    icon="line-md:downloading-loop" style="color: #787373" @confirm="handleAddErp"
+                <Alert :isVisible="showConfirm2" message="ต้องการเพิ่มรายการเข้า M3?" confirmText="ยืนยัน"
+                    cancelText="ยกเลิก" icon="line-md:downloading-loop" style="color: #787373" @confirm="handleAddErp"
                     @close="showConfirm2 = false" />
 
-                <Alert :isVisible="showSuccess" message="เพิ่มสำเร็จ" icon="ep:success-filled"
-                    style="color: #14c257" :confirmButton="false" :cancelButton="false" @close="showSuccess = false" />
+                <Alert :isVisible="showSuccess" message="เพิ่มสำเร็จ" icon="ep:success-filled" style="color: #14c257"
+                    :confirmButton="false" :cancelButton="false" @close="showSuccess = false" />
 
                 <Alert :isVisible="showFail" message="เกิดข้อผิดพลาด" icon="line-md:alert-circle-loop"
                     style="color: #ba1212" :confirmButton="false" :cancelButton="false" @close="showFail = false" />
 
                 <div v-if="activeTab === 0">
-                    <Tables :columns="columnsList" :data="orderData" @update:selected="handleSelectedRows"
+                    <Tables :columns="columnsList" :data="filteredOrderData" @update:selected="handleSelectedRows"
                         :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading">
                         <template #cell="{ column, row }">
                             <span v-if="column.key === 'send'">
-                                <span v-if="!row.send" class="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">ไม่พร้อมส่ง</span>
-                                <span v-else class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">พร้อมส่ง</span>
+                                <span v-if="!row.send"
+                                    class="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">ไม่พร้อมส่ง</span>
+                                <span v-else
+                                    class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">พร้อมส่ง</span>
                             </span>
                             <span v-else>
                                 {{ row[column.key] }}
@@ -67,15 +86,15 @@
                     </Tables>
                 </div>
                 <div v-if="activeTab === 1">
-                    <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
+                    <Tables :columns="columns" :data="filteredOrderData" @update:selected="handleSelectedRows"
                         :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
                 </div>
                 <div v-if="activeTab === 2">
-                    <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
+                    <Tables :columns="columns" :data="filteredOrderData" @update:selected="handleSelectedRows"
                         :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
                 </div>
                 <div v-if="activeTab === 3">
-                    <Tables :columns="columns" :data="orderData" @update:selected="handleSelectedRows"
+                    <Tables :columns="columns" :data="filteredOrderData" @update:selected="handleSelectedRows"
                         :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
                 </div>
             </template>
@@ -90,6 +109,7 @@ import { useRouter } from 'vue-router'
 import { useOrderStore, useUtilityStore } from '../../stores'
 import Tabs from '../../components/Tabs.vue'
 import Tables from '../../components/Tables.vue'
+import Search from '../../components/Search.vue'
 import Alert from '../../components/Alert.vue'
 
 const router = useRouter()
@@ -97,6 +117,7 @@ const order = useOrderStore()
 const util = useUtilityStore()
 
 const orderData = computed(() => order.orderCm)
+const filteredOrderData = computed(() => util.filteredData)
 
 const activeTab = ref(0)
 const status = ref(10)
@@ -108,13 +129,31 @@ const selectedRows = ref([])
 const isLoading = ref(false)
 const loading = ref(true)
 const resetSelected = ref(false)
-const tabs = ref([{ name: 'รายการขาย' }, { name: 'รอเข้าระบบ' }, { name: 'รอส่ง' }, { name: 'ประวัติ' }])
+
+const tabs = ref([
+    { name: 'รายการขาย', status: '10' },
+    { name: 'รอเข้าระบบ', status: '15' },
+    { name: 'รอส่ง', status: '20' },
+    { name: 'ประวัติ', status: '30' }
+])
+
+const tabsWithCounts = computed(() => {
+    return tabs.value.map((tab) => {
+        const count = orderData.value.filter(item => item.status === tab.status).length;
+        return {
+            ...tab,
+            count: count || 0
+        }
+    })
+})
+
 const columnsList = ref([
     { key: 'createDate', label: 'วันที่' },
     { key: 'orderNo', label: 'บิล' },
     { key: 'storeName', label: 'ร้าน' },
     { key: 'address', label: 'ที่อยู่' },
     { key: 'area', label: 'เขต' },
+    { key: 'totalPrice', label: 'รวม' },
     { key: 'send', label: 'สถานะ' }
 ])
 
@@ -123,7 +162,8 @@ const columns = ref([
     { key: 'orderNo', label: 'บิล' },
     { key: 'storeName', label: 'ร้าน' },
     { key: 'address', label: 'ที่อยู่' },
-    { key: 'area', label: 'เขต' }
+    { key: 'area', label: 'เขต' },
+    { key: 'totalPrice', label: 'รวม' }
 ])
 
 const handleSelectedRows = (rows) => {
@@ -203,7 +243,6 @@ const handleAddErp = async () => {
     }
 }
 
-
 const handleSummary = async () => {
     isLoading.value = true
     try {
@@ -266,10 +305,16 @@ watch(activeTab, async (newTab) => {
     }
 })
 
+watch(orderData, (newData) => {
+    util.searchData = newData
+})
+
 onMounted(async () => {
     loading.value = true
     try {
         await order.getOrderCm(status.value)
+        util.searchData = orderData.value
+        console.log('orderData', orderData.value);
     } catch (error) {
         console.error("Error on mounted:", error)
         handleFail()

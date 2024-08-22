@@ -1,5 +1,5 @@
 <template>
-    <div class="flex">
+    <div class="flex font-kanit">
         <Sidebar />
         <div :class="[isSidebarOpen ? 'ml-64' : 'ml-20', 'flex-1 transition-margin duration-300']">
             <Nav />

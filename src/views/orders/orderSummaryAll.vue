@@ -2,7 +2,7 @@
     <div class="mb-5">
         <Breadcrumb />
     </div>
-    <div class="a4-pages">
+    <div class="a4-pages font-sarabun">
         <div class="print-icon-container">
             <Icon @click="printPage" icon="noto-v1:printer" height='30' width='30' />
         </div>

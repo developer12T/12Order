@@ -2,7 +2,7 @@
     <div class="mb-5">
         <Breadcrumb />
     </div>
-    <div class="a4-pages">
+    <div class="a4-pages font-sarabun">
         <div class="print-icon-container">
             <Icon @click="printPage" icon="noto-v1:printer" height='30' width='30'/>
         </div>
@@ -146,7 +146,6 @@ onMounted(() => {
 .info-column {
     display: flex;
     flex-direction: column;
-
 }
 
 .aligned-item {
@@ -188,8 +187,8 @@ onMounted(() => {
 
 p {
     margin: 0 0 5px;
-    line-height: 1.6;
-    font-size: 14px;
+    line-height: 1.5;
+    font-size: 12px;
 }
 
 .print-icon-container {
@@ -198,21 +197,6 @@ p {
     width: 100%;
     padding-right: 5px;
     margin-bottom: 10px;
-}
-
-@media print {
-    .print-icon-container {
-        display: none;
-    }
-
-    @page {
-        margin: 0;
-    }
-
-    body {
-        margin: 0;
-        padding: 0;
-    }
 }
 
 @media print {
