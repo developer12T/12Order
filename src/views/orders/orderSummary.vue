@@ -4,9 +4,9 @@
     </div>
     <div class="a4-pages font-sarabun">
         <div class="print-icon-container">
-            <Icon @click="printPage" icon="noto-v1:printer" height='30' width='30'/>
+            <Icon @click="printPage" icon="noto-v1:printer" height='30' width='30' />
         </div>
-        <div v-for="(order, index) in summaryOrders" :key="index" class="a4-page">
+        <div v-for="(page, pageIndex) in paginatedSummary" :key="pageIndex" class="a4-page">
             <div class="header">
                 <h1>(ใบสั่งจอง)</h1>
             </div>
@@ -14,37 +14,37 @@
                 <div class="info-column">
                     <div class="aligned-item">
                         <p class="label"><strong>ชื่อลูกค้า</strong></p>
-                        <p>{{ order.storeId }} {{ order.storeName }}</p>
+                        <p>{{ page.order.storeId }} {{ page.order.storeName }}</p>
                     </div>
                     <div class="aligned-item">
                         <p class="label"><strong>ที่อยู่ลูกค้า</strong></p>
-                        <p>{{ order.address }}</p>
+                        <p>{{ page.order.address }}</p>
                     </div>
                     <div class="aligned-item">
                         <p class="label"><strong>สถานที่ส่ง</strong></p>
-                        <p>{{ order.address }}</p>
+                        <p>{{ page.order.address }}</p>
                     </div>
                     <div class="aligned-item">
                         <p class="label"><strong>เบอร์โทร</strong></p>
-                        <p>{{ order.tel }}</p>
+                        <p>{{ page.order.tel }}</p>
                     </div>
                     <div class="aligned-item">
                         <p class="label"><strong>หมายเหตุ</strong></p>
-                        <p>{{ order.note || '' }}</p>
+                        <p>{{ page.order.note || '' }}</p>
                     </div>
                 </div>
                 <div class="info-column">
                     <div class="aligned-item">
                         <p class="label"><strong>เลขที่เอกสาร</strong></p>
-                        <p>{{ order.orderNo }}</p>
+                        <p>{{ page.order.orderNo }}</p>
                     </div>
                     <div class="aligned-item">
                         <p class="label"><strong>วันที่เอกสาร</strong></p>
-                        <p>{{ order.createDate }}</p>
+                        <p>{{ page.order.createDate }}</p>
                     </div>
                     <div class="aligned-item">
                         <p class="label"><strong>พนักงานขาย</strong></p>
-                        <p>{{ order.saleCode }} {{ order.saleMan }}</p>
+                        <p>{{ page.order.saleCode }} {{ page.order.saleMan }}</p>
                     </div>
                 </div>
             </div>
@@ -60,26 +60,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in order.list" :key="item.id">
+                    <tr v-for="(item, itemIndex) in page.items" :key="item.id">
                         <td>{{ item.id }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.convertedUnits.large.qty }}</td>
                         <td>{{ item.convertedUnits.medium.qty }}</td>
                         <td>{{ item.convertedUnits.small.qty }}</td>
                     </tr>
-                    <tr v-for="i in (16  - order.list.length)" :key="'empty-' + i">
+
+                    <tr v-for="i in (itemsPerPage - page.items.length)" :key="'empty-' + i">
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr>
-                        <td colspan="2" class="text-center font-bold">รวมทั้งหมด</td>
-                        <td>{{ order.totalList.large }}</td>
-                        <td>{{ order.totalList.medium }}</td>
-                        <td>{{ order.totalList.small }}</td>
-                    </tr>
+
+                    <template
+                        v-if="pageIndex === paginatedSummary.length - 1 || paginatedSummary[pageIndex + 1]?.order !== page.order">
+                        <tr>
+                            <td colspan="2" class="text-center font-bold">รวมทั้งหมด</td>
+                            <td>{{ page.totalList.large }}</td>
+                            <td>{{ page.totalList.medium }}</td>
+                            <td>{{ page.totalList.small }}</td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
         </div>
@@ -95,6 +100,23 @@ import Breadcrumb from '../../components/Breadcrumb.vue'
 const order = useOrderStore()
 const util = useUtilityStore()
 const summaryOrders = computed(() => order.orderSummary)
+
+const itemsPerPage = 16
+const paginatedSummary = computed(() => {
+    const pages = []
+    summaryOrders.value.forEach(order => {
+        const list = order.list || []
+        for (let i = 0; i < list.length; i += itemsPerPage) {
+            const pageItems = list.slice(i, i + itemsPerPage)
+            pages.push({
+                order,
+                items: pageItems,
+                totalList: order.totalList
+            })
+        }
+    })
+    return pages
+})
 
 const printPage = () => {
     const printContent = document.querySelector('.a4-pages').innerHTML;
@@ -151,14 +173,14 @@ onMounted(() => {
 .aligned-item {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 1px; 
+    margin-bottom: 1px;
 }
 
 .label {
-    width: 100px; 
-    flex-shrink: 0; 
-    text-align: left; 
-    margin-right: 1px; 
+    width: 100px;
+    flex-shrink: 0;
+    text-align: left;
+    margin-right: 1px;
     font-weight: bold;
 }
 
@@ -213,5 +235,4 @@ p {
         padding: 0;
     }
 }
-
 </style>
