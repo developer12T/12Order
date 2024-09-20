@@ -1,29 +1,30 @@
 <template>
     <div>
-        <div class="flex flex-row justify-end">
-            <button @click="handleSummary(selectedRows)" type="button" :disabled="!selectedRows.length" 
-            :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                {
-                    'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                }]"> ใบจอง
-            </button>
-            <button @click="handleSummaryAll(selectedRows)" type="button" :disabled="!selectedRows.length"
-                :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                {
-                    'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                }]"> ใบรวม
-            </button>
-            <button v-if="activeTab === 0" @click="handleConfirm(selectedRows)" type="button" :disabled="!selectedRows.length"
-                :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                {
-                    'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                    'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                }]"> นำเข้าระบบ
-            </button>
-        </div>
         <Tabs :tabs="tabs" v-model="activeTab">
+            <template #buttons>
+                <div class="flex flex-row justify-end">
+                    <button @click="handleSummary(selectedRows)" type="button" :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+            {
+                'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+            }]"> ใบจอง
+                    </button>
+                    <button @click="handleSummaryAll(selectedRows)" type="button" :disabled="!selectedRows.length"
+                        :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+            {
+                'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+            }]"> ใบรวม
+                    </button>
+                    <button v-if="activeTab === 0" @click="handleConfirm(selectedRows)" type="button"
+                        :disabled="!selectedRows.length" :class="['mr-2 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+            {
+                'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+            }]"> นำเข้าระบบ
+                    </button>
+                </div>
+            </template>
             <template #default="{ activeTab }">
                 <div v-if="isLoading"
                     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
