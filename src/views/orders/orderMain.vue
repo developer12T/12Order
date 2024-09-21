@@ -149,6 +149,7 @@ const tabsWithCounts = computed(() => {
 
 const columnsList = ref([
     { key: 'createDate', label: 'วันที่' },
+    { key: 'createTime', label: 'เวลา' },
     { key: 'orderNo', label: 'บิล' },
     { key: 'storeName', label: 'ร้าน' },
     { key: 'address', label: 'ที่อยู่' },
@@ -159,6 +160,7 @@ const columnsList = ref([
 
 const columns = ref([
     { key: 'createDate', label: 'วันที่' },
+    { key: 'createTime', label: 'เวลา' },
     { key: 'orderNo', label: 'บิล' },
     { key: 'storeName', label: 'ร้าน' },
     { key: 'address', label: 'ที่อยู่' },
