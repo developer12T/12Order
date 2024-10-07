@@ -221,27 +221,84 @@ const handleAdd = async () => {
     }
 }
 
+// const handleAddErp = async () => {
+//     showConfirm2.value = false
+//     isLoading.value = true
+//     try {
+//         await order.addOrderERP(
+//             selectedRows.value.map((item) => {
+//                 return {
+//                     orderNo: item.orderNo
+//                 }
+//             })
+//         )
+//         selectedRows.value = []
+//         handleSuccess()
+//     } catch (error) {
+//         console.error(error)
+//         handleFail()
+//     } finally {
+//         isLoading.value = false
+//         order.getOrderCm(status.value)
+//         resetSelected.value = true
+//         console.log('valueSelected', selectedRows.value)
+//     }
+// }
+const formatDate = (dateStr) => {
+    const [day, month, year] = dateStr.split('/')
+    return `${year}${month.padStart(2, '0')}${day.padStart(2, '0')}`
+}
+
 const handleAddErp = async () => {
     showConfirm2.value = false
     isLoading.value = true
     try {
-        await order.addOrderERP(
-            selectedRows.value.map((item) => {
-                return {
-                    orderNo: item.orderNo
-                }
-            })
-        )
+        const orders = selectedRows.value.map((item) => {
+            return {
+                Hcase: 1, 
+                orderNo: item.orderNo,
+                orderType: "M31",
+                orderStatusLow: 22,
+                orderStatusHigh: 22,
+                orderDate: formatDate(item.createDate), 
+                requestDate: formatDate(item.createDate),
+                customerNo: item.storeId, 
+                payer: "21000026",
+                addressID: "INVTSP", 
+                warehouse: item.warehouse,
+                total: item.totalPrice,
+                totalNet: item.totalPrice - item.totalDiscount,
+                OAFRE1: "YSEND",
+                ref: `OD${item.orderNo}`,
+                note: item.note, 
+                item: item.list.map((product) => {
+                    return {
+                        itemCode: product.id,
+                        qtyPCS: product.qtyPcs, 
+                        qtyCTN: Math.floor(product.qtyPcs / product.unitQty), 
+                        unit: product.unitText, 
+                        price: product.pricePerQty, 
+                        discount: product.discount, 
+                        netPrice: product.pricePerQty - product.discount,
+                        total: product.totalAmount, 
+                        promotionCode: product.proCode || "" 
+                    };
+                })
+            };
+        });
+
+        await order.addOrderERP(orders)
+
         selectedRows.value = []
-        handleSuccess()
+        handleSuccess();
     } catch (error) {
-        console.error(error)
-        handleFail()
+        console.error(error);
+        handleFail();
     } finally {
-        isLoading.value = false
-        order.getOrderCm(status.value)
-        resetSelected.value = true
-        console.log('valueSelected', selectedRows.value)
+        isLoading.value = false;
+        order.getOrderCm(status.value);
+        resetSelected.value = true;
+        console.log('valueSelected', selectedRows.value);
     }
 }
 
