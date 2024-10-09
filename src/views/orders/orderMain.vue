@@ -263,7 +263,7 @@ const handleAddErp = async () => {
                 orderDate: formatDate(item.createDate), 
                 requestDate: formatDate(item.createDate),
                 customerNo: item.storeId, 
-                payer: "21000026",
+                payer: item.payer,
                 addressID: "INVTSP", 
                 warehouse: item.warehouse,
                 total: item.totalPrice,
@@ -274,8 +274,7 @@ const handleAddErp = async () => {
                 item: item.list.map((product) => {
                     return {
                         itemCode: product.id,
-                        qtyPCS: product.qtyPcs, 
-                        qtyCTN: Math.floor(product.qtyPcs / product.unitQty), 
+                        qty: product.qty, 
                         unit: product.unitText, 
                         price: product.pricePerQty, 
                         discount: product.discount, 
@@ -287,6 +286,7 @@ const handleAddErp = async () => {
             };
         });
 
+        // console.log('1',orders)
         await order.addOrderERP(orders)
 
         selectedRows.value = []
