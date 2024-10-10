@@ -270,7 +270,7 @@ const handleAddErp = async () => {
                 totalNet: item.totalPrice - item.totalDiscount,
                 OAFRE1: "YSEND",
                 ref: `OD${item.orderNo}`,
-                note: item.note, 
+                note: item.note.substring(1, 30), 
                 item: item.list.map((product) => {
                     return {
                         itemCode: product.id,
