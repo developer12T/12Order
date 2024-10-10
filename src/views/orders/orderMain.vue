@@ -286,7 +286,6 @@ const handleAddErp = async () => {
             };
         });
 
-        // console.log('1',orders)
         await order.addOrderERP(orders)
 
         selectedRows.value = []

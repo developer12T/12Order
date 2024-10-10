@@ -72,7 +72,7 @@ export const useOrderStore = defineStore('orders', {
       this.error = null
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_ERP_BASE_URL1 + '/sale/addOrder',
+          import.meta.env.VITE_API_ERP_BASE_URL + '/sale/addOrder',
           {
             order
           }
@@ -92,8 +92,7 @@ export const useOrderStore = defineStore('orders', {
       this.error = null
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_ERP_BASE_URL1 + '/sale/addOrderErp',
-          // import.meta.env.VITE_API_ERP_BASE_URL + '/order/insert',
+          import.meta.env.VITE_API_ERP_BASE_URL + '/sale/addOrderErp',
           order
           // {
           //   order
