@@ -9,10 +9,10 @@
             </div>
             <div v-else class="flex flex-col text-sm">
                 <span>เลข {{ cnData.orderNo }} </span>
-                <span>รหัส {{ cnData.code }} | ร้านค้า {{ cnData.name }}</span>
+                <span>รหัส {{ cnData.storeId }} | ร้านค้า {{ cnData.name }}</span>
                 <span>ที่อยู่ {{ cnData.address }}</span>
                 <span>เบอร์โทร {{ cnData.tel }}</span>
-                <span>เลขผู้เสียภาษี {{ cnData.tax }}</span>
+                <span>เลขผู้เสียภาษี {{ cnData.tax || '-' }}</span>
                 <span>พนักงานขาย {{ cnData.saleMan }}</span>
             </div>
         </div>
@@ -47,6 +47,8 @@ const columns = ref([
     { key: 'name', label: 'สินค้า' },
     { key: 'qtyText', label: 'จำนวน' },
     { key: 'pricePerQty', label: 'ราคาต่อหน่วย' },
+    { key: 'exp', label: 'วันหมดอายุ' },
+    { key: 'lot', label: 'ล็อต' },
     { key: 'summaryPrice', label: 'รวม' }
 ]);
 
