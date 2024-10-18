@@ -11,14 +11,16 @@ export const useCnStore = defineStore('cn', {
     orderCnCmItem: [],
   }),
   actions: {
-    async getCnOrderCm() {
+    async getCnOrderCm(status) {
       this.isLoading = true
       this.error = null
       this.noData = false
       try {
         const response = await axios.get(
           import.meta.env.VITE_API_BASE_URL + '/cn/getCnOrderCm',
-        )
+          {
+            params: { status }
+          })
         if (response.status === 204) {
           this.noData = true
           this.orderCnCm = []
