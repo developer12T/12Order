@@ -62,23 +62,59 @@ export const useCnStore = defineStore('cn', {
         this.isLoading = false
       }
     },
+    async summaryOrder(order) {
+      this.isLoading = true
+      this.error = null
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_BASE_URL + '/sale/summaryOrder',
+          order
+        )
+        this.orderSummary = response.data
+        console.log('summary', response.data)
+        console.log('summary2', this.orderSummary)
+      } catch (error) {
+        this.error = error.message || 'Error fetching orders'
+        console.error(error)
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async addCnOrder(order) {
+      this.isLoading = true
+      this.error = null
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_ERP_BASE_URL + '/cn/createCnOrder',
+          {
+            order
+          }
+        )
+        console.log('addCn', response.data)
+      } catch (error) {
+        this.error = error.message || 'Error fetching orders'
+        console.error(error)
+      } finally {
+        this.isLoading = false
+      }
+    },
     async addCnErp(order) {
-        this.isLoading = true
-        this.error = null
-        try {
-          const response = await axios.post(
-            import.meta.env.VITE_API_ERP_BASE_URL + '/cn/createOrder',
-            {
-              order
-            }
-          )
-          console.log('addCn', response.data)
-        } catch (error) {
-          this.error = error.message || 'Error fetching orders'
-          console.error(error)
-        } finally {
-          this.isLoading = false
-        }
-      },
+      this.isLoading = true
+      this.error = null
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_ERP_BASE_URL + '/cn/createOrder',
+          {
+            order
+          }
+        )
+        console.log('addCn', response.data)
+      } catch (error) {
+        this.error = error.message || 'Error fetching orders'
+        console.error(error)
+      } finally {
+        this.isLoading = false
+      }
+    },
   },
 })

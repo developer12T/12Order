@@ -14,19 +14,7 @@
                         'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
                         'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
                     }]">
-                        ใบจอง
-                        <span v-if="selectedRows.length"
-                            class="inline-flex items-center justify-center min-w-[1.5rem] h-4 px-2 ms-1 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
-                            {{ selectedRows.length }}
-                        </span>
-                    </button>
-                    <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummaryAll(selectedRows)" type="button"
-                        :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                    {
-                        'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                    }]">
-                        ใบรวม
+                        ใบรับคืน
                         <span v-if="selectedRows.length"
                             class="inline-flex items-center justify-center min-w-[1.5rem] h-4 px-2 ms-1 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
                             {{ selectedRows.length }}
@@ -206,7 +194,7 @@ const handleAdd = async () => {
     showConfirm1.value = false
     isLoading.value = true
     try {
-        await order.addOrder(
+        await order.addCnOrder(
             selectedRows.value
         )
         selectedRows.value = []
@@ -274,7 +262,7 @@ const handleAddErp = async () => {
         handleFail();
     } finally {
         isLoading.value = false;
-        order.getOrderCm(status.value);
+        order.getCnOrderCm(status.value);
         resetSelected.value = true;
         console.log('valueSelected', selectedRows.value);
     }
@@ -290,21 +278,7 @@ const handleSummary = async () => {
         console.error(error)
     } finally {
         isLoading.value = false
-        await router.push('/order/summary')
-    }
-}
-
-const handleSummaryAll = async () => {
-    isLoading.value = true
-    try {
-        util.summaryAll = selectedRows.value
-        await order.summaryOrderAll(selectedRows.value)
-        console.log(util.summaryAll)
-    } catch (error) {
-        console.error(error)
-    } finally {
-        isLoading.value = false
-        await router.push('/order/summaryAll')
+        await router.push('/cn/summary')
     }
 }
 

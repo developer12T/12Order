@@ -22,11 +22,11 @@ const orderRoutes = [
                 component: () => import('../../views/cn/cnDetail.vue'),
                 meta: { breadcrumb: 'รายละเอียด' }
             },
-            // {
-            //     path: 'summary',
-            //     component: () => import('../../views/orders/orderSummary.vue'),
-            //     meta: { breadcrumb: 'ใบสั่งจอง' }
-            // },
+            {
+                path: 'summary',
+                component: () => import('../../views/cn/cnSummary.vue'),
+                meta: { breadcrumb: 'ใบรับคืน' }
+            },
             // {
             //     path: 'summaryAll',
             //     component: () => import('../../views/orders/orderSummaryAll.vue'),
