@@ -8,7 +8,7 @@
             </template>
             <template #buttons>
                 <div>
-                    <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummary(selectedRows)" type="button"
+                    <button v-if="activeTab === 0" @click="handleSummary(selectedRows)" type="button"
                         :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
                     {
                         'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
@@ -139,25 +139,6 @@ const columns = ref([
     { key: 'totalAmount', label: 'รวม' }
 ])
 
-// const columnsList = ref([
-//     { key: 'createDate', label: 'วันที่' },
-//     { key: 'createTime', label: 'เวลา' },
-//     { key: 'orderNo', label: 'บิล' },
-//     { key: 'storeName', label: 'ร้าน' },
-//     { key: 'address', label: 'ที่อยู่' },
-//     { key: 'area', label: 'เขต' },
-//     { key: 'totalPrice', label: 'รวม' },
-// ])
-// const columns = ref([
-//     { key: 'createDate', label: 'วันที่' },
-//     { key: 'createTime', label: 'เวลา' },
-//     { key: 'orderNo', label: 'บิล' },
-//     { key: 'storeName', label: 'ร้าน' },
-//     { key: 'address', label: 'ที่อยู่' },
-//     { key: 'area', label: 'เขต' },
-//     { key: 'totalPrice', label: 'รวม' }
-// ])
-
 const handleSelectedRows = (rows) => {
     selectedRows.value = rows
     console.log('Selected Rows:', selectedRows.value)
@@ -233,27 +214,27 @@ const handleAddErp = async () => {
                 payer: item.payer,
                 addressID: "INVTSP", 
                 warehouse: item.warehouse,
-                total: item.totalPrice,
-                totalNet: item.totalPrice - item.totalDiscount,
-                OAFRE1: "YSEND",
+                total: item.totalAmount*-1,
+                totalNet: item.totalAmount*-1,
                 ref: `OD${item.orderNo}`,
                 note: item.note.substring(1, 30), 
                 item: item.list.map((product) => {
                     return {
                         itemCode: product.id,
-                        qty: product.qty, 
+                        itemLot: product.lot,
+                        qty: product.qty*-1, 
                         unit: product.unitText, 
                         price: product.pricePerQty, 
-                        discount: product.discount, 
-                        netPrice: product.pricePerQty - product.discount,
-                        total: product.totalAmount, 
-                        promotionCode: product.proCode || "" 
-                    };
+                        // discount: 0, 
+                        netPrice: product.pricePerQty,
+                        total: product.amount*-1, 
+                        // promotionCode: "" 
+                    }
                 })
-            };
-        });
-
-        await order.addOrderERP(orders)
+            }
+        })
+        console.log('123',orders)
+        // await order.addOrderERP(orders)
 
         selectedRows.value = []
         handleSuccess();
