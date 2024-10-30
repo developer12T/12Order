@@ -7,10 +7,21 @@
             <Icon @click="printPage" icon="noto-v1:printer" height='30' width='30' />
         </div>
         <div v-for="(page, pageIndex) in paginatedSummary" :key="pageIndex" class="a4-page">
-            <div class="header">
-                <h1>(ใบรับคืนสินค้า)</h1>
+            <div class="flex justify-end header">
+                <p>FM-SA-015 rev.00 01/02/64</p>
             </div>
-            <div class="flex flex-row justify-between mt-2">
+            <div class="header">
+                <div class="flex flex-row justify-between">
+                    <img src="../../../public/logo-onetwo.png" class="flex-none w-28">
+                    <h1 class="flex items-center pr-60">บริษัท วันทูเทรดดิ้ง จำกัด</h1>
+                </div>
+            </div>
+            <div class="flex flex-row justify-between">
+                <p class="flex justify-start">เล่มที่ ............</p>
+                <h5>ใบรับคืนสินค้า</h5>
+                <p class="flex justify-end">เล่มที่ 000001</p>
+            </div>
+            <div class="flex flex-row justify-between"> 
                 <div class="info-column">
                     <div class="aligned-item">
                         <p class="label"><strong>ชื่อลูกค้า</strong></p>
@@ -20,18 +31,18 @@
                         <p class="label"><strong>ที่อยู่ลูกค้า</strong></p>
                         <p>{{ page.order.address }}</p>
                     </div>
-                    <div class="aligned-item">
+                    <!-- <div class="aligned-item">
                         <p class="label"><strong>สถานที่ส่ง</strong></p>
                         <p>{{ page.order.address }}</p>
-                    </div>
-                    <div class="aligned-item">
+                    </div> -->
+                    <!-- <div class="aligned-item">
                         <p class="label"><strong>เบอร์โทร</strong></p>
                         <p>{{ page.order.tel }}</p>
-                    </div>
-                    <div class="aligned-item">
+                    </div> -->
+                    <!-- <div class="aligned-item">
                         <p class="label"><strong>หมายเหตุ</strong></p>
                         <p>{{ page.order.note || '' }}</p>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="info-column">
                     <div class="aligned-item">
@@ -89,16 +100,16 @@
             </table>
             <div class="mt-5">
                             <div class="flex flex-row justify-between">
-                                <p class="flex items-start">ผู้คืนสินค้า (ลูกค้า) .........................................................................................................</p>
-                                <p class="flex items-end">วันที่ .................................................</p>
+                                <p class="flex items-start">ผู้คืนสินค้า (ลูกค้า) .............................................................................................................................</p>
+                                <p class="flex items-end">วันที่ ...............................................................</p>
                             </div>
                             <div class="flex flex-row justify-between">
-                                <p>ผู้รับคืนสินค้า (รถขนส่ง) ................................................................................................</p>
-                                <p class="flex items-end">วันที่ .................................................</p>
+                                <p>ผู้รับคืนสินค้า (รถขนส่ง) ....................................................................................................................</p>
+                                <p class="flex items-end">วันที่ ...............................................................</p>
                             </div>
                             <div class="flex flex-row justify-between">
-                                <p>ผู้ตรวจสอบ (คลังสินค้า/บัญชี) .......................................................................................</p>
-                                <p class="flex items-end">วันที่ .................................................</p>
+                                <p>ผู้ตรวจสอบ (คลังสินค้า/บัญชี) ...........................................................................................................</p>
+                                <p class="flex items-end">วันที่ ...............................................................</p>
                             </div>
                         </div>
         </div>
@@ -156,13 +167,13 @@ onMounted(() => {
 .a4-page {
     width: 210mm;
     height: 297mm;
-    padding: 15mm 20mm;
+    padding: 10mm 12mm;
     background-color: white;
     box-shadow: 0 0 5mm rgba(0, 0, 0, 0.1);
-    margin-bottom: 5mm;
+    margin-bottom: 2mm;
     display: flex;
     flex-direction: column;
-    gap: 5mm;
+    gap: 2mm;
     page-break-after: always;
 }
 
@@ -172,11 +183,15 @@ onMounted(() => {
 }
 
 .header h1 {
-    font-size: 28px;
+    font-size: 20px;
     font-weight: bold;
     margin: 0;
     text-transform: uppercase;
     color: #333;
+}
+
+.header p {
+    font-size: 10px;
 }
 
 .info-column {
