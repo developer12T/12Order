@@ -63,11 +63,15 @@
             <table class="order-table mt-4">
                 <thead>
                     <tr>
-                        <th>รหัสสินค้า</th>
-                        <th>รายการ</th>
+                        <th rowspan="2" class="">รหัสสินค้า</th>
+                        <th rowspan="2">รายการ</th>
+                        <th colspan="3">จำนวนสินค้า</th>
+                        <th rowspan="2">หมายเหตุ</th>
+                    </tr>
+                    <tr>
                         <th>หีบ</th>
-                        <th>แพ็ค</th>
-                        <th>ชิ้น</th>
+                        <th>ถุง/แพ็ค/แผง</th>
+                        <th>ชิ้น/ซอง/ขวด</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,6 +81,7 @@
                         <td>{{ item.convertedUnits.large.qty }}</td>
                         <td>{{ item.convertedUnits.medium.qty }}</td>
                         <td>{{ item.convertedUnits.small.qty }}</td>
+                        <td></td>
                     </tr>
 
                     <tr v-for="i in (itemsPerPage - page.items.length)" :key="'empty-' + i">
@@ -85,6 +90,7 @@
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
+                        <td></td>
                     </tr>
 
                     <template
@@ -94,6 +100,7 @@
                             <td>{{ page.totalList.large }}</td>
                             <td>{{ page.totalList.medium }}</td>
                             <td>{{ page.totalList.small }}</td>
+                            <td></td>
                         </tr>
                     </template>
                 </tbody>
@@ -225,6 +232,7 @@ onMounted(() => {
     padding: 8px 12px;
     text-align: left;
     font-size: 14px;
+    text-align: center;
     line-height: 1.5;
 }
 
