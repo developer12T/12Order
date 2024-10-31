@@ -7,55 +7,54 @@
             <Icon @click="printPage" icon="noto-v1:printer" height='30' width='30' />
         </div>
         <div v-for="(page, pageIndex) in paginatedSummary" :key="pageIndex" class="a4-page">
-            <div class="flex justify-end header">
-                <p>FM-SA-015 rev.00 01/02/64</p>
-            </div>
             <div class="header">
                 <div class="flex flex-row justify-between">
-                    <img src="../../../public/logo-onetwo.png" class="flex-none w-28">
-                    <h1 class="flex items-center pr-60">บริษัท วันทูเทรดดิ้ง จำกัด</h1>
+                    <img src="/logo-onetwo.png" class="flex-none w-28">
+                    <h1 class="flex items-center">บริษัท วันทูเทรดดิ้ง จำกัด</h1>
+                    <p>FM-SA-015 rev.00 01/02/64</p>
                 </div>
             </div>
-            <div class="flex flex-row justify-between">
-                <p class="flex justify-start">เล่มที่ ............</p>
+            <!-- <div class="flex justify-center">
                 <h5>ใบรับคืนสินค้า</h5>
-                <p class="flex justify-end">เล่มที่ 000001</p>
+            </div> -->
+            <div class="flex flex-row justify-between">
+                <p class="flex justify-start font-bold">เล่มที่ ............</p>
+                <h5>ใบรับคืนสินค้า</h5>
+                <p class="flex justify-end font-bold">เลขที่ 000001</p>
             </div>
-            <div class="flex flex-row justify-between"> 
+            <div class="info">
                 <div class="info-column">
                     <div class="aligned-item">
-                        <p class="label"><strong>ชื่อลูกค้า</strong></p>
-                        <p>{{ page.order.storeId }} {{ page.order.storeName }}</p>
+                        <p class="label">ชื่อลูกค้า</p>
+                        <p>{{ page.order.storeName }}</p>
                     </div>
                     <div class="aligned-item">
-                        <p class="label"><strong>ที่อยู่ลูกค้า</strong></p>
+                        <p class="label">ที่อยู่ลูกค้า</p>
                         <p>{{ page.order.address }}</p>
                     </div>
-                    <!-- <div class="aligned-item">
-                        <p class="label"><strong>สถานที่ส่ง</strong></p>
-                        <p>{{ page.order.address }}</p>
-                    </div> -->
-                    <!-- <div class="aligned-item">
-                        <p class="label"><strong>เบอร์โทร</strong></p>
-                        <p>{{ page.order.tel }}</p>
-                    </div> -->
-                    <!-- <div class="aligned-item">
-                        <p class="label"><strong>หมายเหตุ</strong></p>
-                        <p>{{ page.order.note || '' }}</p>
-                    </div> -->
                 </div>
                 <div class="info-column">
                     <div class="aligned-item">
-                        <p class="label"><strong>เลขที่เอกสาร</strong></p>
-                        <p>{{ page.order.orderNo }}</p>
+                        <p class="label">รหัสลูกค้า</p>
+                        <p>{{ page.order.storeId }} </p>
                     </div>
                     <div class="aligned-item">
-                        <p class="label"><strong>วันที่เอกสาร</strong></p>
+                        <p class="label">อ้างอิงบิลเลขที่</p>
+                        <p>.......................</p>
+                    </div>
+                    <div class="aligned-item">
+                        <p class="label">พนักงานขาย</p>
+                        <p class="w-36">{{ page.order.saleCode }} {{ page.order.saleMan }}</p>
+                    </div>
+                </div>
+                <div class="info-column">
+                    <div class="aligned-item">
+                        <p class="label">วันที่เอกสาร</p>
                         <p>{{ page.order.createDate }}</p>
                     </div>
                     <div class="aligned-item">
-                        <p class="label"><strong>พนักงานขาย</strong></p>
-                        <p>{{ page.order.saleCode }} {{ page.order.saleMan }}</p>
+                        <p class="label">วันที่บิล</p>
+                        <p>....................</p>
                     </div>
                 </div>
             </div>
@@ -63,21 +62,21 @@
             <table class="order-table mt-4">
                 <thead>
                     <tr>
-                        <th rowspan="2" class="">รหัสสินค้า</th>
+                        <th rowspan="2">รหัสสินค้า</th>
                         <th rowspan="2">รายการ</th>
                         <th colspan="3">จำนวนสินค้า</th>
                         <th rowspan="2">หมายเหตุ</th>
                     </tr>
                     <tr>
-                        <th>หีบ</th>
+                        <th class="w-20">หีบ</th>
                         <th>ถุง/แพ็ค/แผง</th>
-                        <th>ชิ้น/ซอง/ขวด</th>
+                        <th>ซอง/ขวด</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item) in page.items" :key="item.id">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.name }}</td>
+                        <td class="text-left">{{ item.name }}</td>
                         <td>{{ item.convertedUnits.large.qty }}</td>
                         <td>{{ item.convertedUnits.medium.qty }}</td>
                         <td>{{ item.convertedUnits.small.qty }}</td>
@@ -96,7 +95,7 @@
                     <template
                         v-if="pageIndex === paginatedSummary.length - 1 || paginatedSummary[pageIndex + 1]?.order !== page.order">
                         <tr>
-                            <td colspan="2" class="text-center font-bold">รวมทั้งหมด</td>
+                            <td colspan="2" class="text-center font-bold">รวม</td>
                             <td>{{ page.totalList.large }}</td>
                             <td>{{ page.totalList.medium }}</td>
                             <td>{{ page.totalList.small }}</td>
@@ -106,19 +105,25 @@
                 </tbody>
             </table>
             <div class="mt-5">
-                            <div class="flex flex-row justify-between">
-                                <p class="flex items-start">ผู้คืนสินค้า (ลูกค้า) .............................................................................................................................</p>
-                                <p class="flex items-end">วันที่ ...............................................................</p>
-                            </div>
-                            <div class="flex flex-row justify-between">
-                                <p>ผู้รับคืนสินค้า (รถขนส่ง) ....................................................................................................................</p>
-                                <p class="flex items-end">วันที่ ...............................................................</p>
-                            </div>
-                            <div class="flex flex-row justify-between">
-                                <p>ผู้ตรวจสอบ (คลังสินค้า/บัญชี) ...........................................................................................................</p>
-                                <p class="flex items-end">วันที่ ...............................................................</p>
-                            </div>
-                        </div>
+                <div class="flex flex-row justify-between">
+                    <p class="flex items-start">ผู้คืนสินค้า (ลูกค้า)
+                        .............................................................................................................................
+                    </p>
+                    <p class="flex items-end">วันที่ ...............................................................</p>
+                </div>
+                <div class="flex flex-row justify-between">
+                    <p>ผู้รับคืนสินค้า (รถขนส่ง)
+                        ....................................................................................................................
+                    </p>
+                    <p class="flex items-end">วันที่ ...............................................................</p>
+                </div>
+                <div class="flex flex-row justify-between">
+                    <p>ผู้ตรวจสอบ (คลังสินค้า/บัญชี)
+                        ...........................................................................................................
+                    </p>
+                    <p class="flex items-end">วันที่ ...............................................................</p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -133,7 +138,7 @@ const order = useOrderStore()
 const util = useUtilityStore()
 const summaryOrders = computed(() => order.orderSummary)
 
-const itemsPerPage = 16
+const itemsPerPage = 20
 const paginatedSummary = computed(() => {
     const pages = []
     summaryOrders.value.forEach(order => {
@@ -174,7 +179,7 @@ onMounted(() => {
 .a4-page {
     width: 210mm;
     height: 297mm;
-    padding: 10mm 12mm;
+    padding: 5mm 8mm;
     background-color: white;
     box-shadow: 0 0 5mm rgba(0, 0, 0, 0.1);
     margin-bottom: 2mm;
@@ -201,6 +206,10 @@ onMounted(() => {
     font-size: 10px;
 }
 
+.info {
+    display: flex;
+}
+
 .info-column {
     display: flex;
     flex-direction: column;
@@ -217,7 +226,6 @@ onMounted(() => {
     flex-shrink: 0;
     text-align: left;
     margin-right: 1px;
-    font-weight: bold;
 }
 
 .order-table {
@@ -230,13 +238,16 @@ onMounted(() => {
 .order-table td {
     border: 1px solid #000;
     padding: 8px 12px;
-    text-align: left;
-    font-size: 14px;
+    font-size: 12px;
+    line-height: 0.6;
+}
+
+.order-table tr {
     text-align: center;
-    line-height: 1.5;
 }
 
 .order-table th {
+    /* padding: 2px 5px 10px 2px; */
     background-color: #f5f5f5;
 }
 
@@ -248,6 +259,18 @@ p {
     margin: 0 0 5px;
     line-height: 1.5;
     font-size: 12px;
+}
+
+h1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+h5 {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-top: -20px;
 }
 
 .print-icon-container {

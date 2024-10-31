@@ -17,10 +17,12 @@
                                     class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900">
                                 </Icon>
                                 <span v-if="showText"
-                                    class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap transition-opacity duration-300">{{
-            item.name }}</span>
+                                    class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap transition-opacity duration-300">
+                                    {{ item.name }}
+                                </span>
                                 <Icon v-if="showText" class="w-3 h-3 transition-opacity duration-300"
-                                    icon="mdi:chevron-down"></Icon>
+                                    icon="mdi:chevron-down">
+                                </Icon>
                             </button>
                             <ul v-show="isSidebarOpen && isSubmenuOpen(index)"
                                 class="py-2 space-y-2 transition-all duration-300">

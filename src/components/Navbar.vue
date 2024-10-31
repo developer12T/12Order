@@ -3,7 +3,7 @@
         class="fixed top-0 left-0 z-40 w-full h-16 bg-gray-100 shadow-lg flex items-center justify-between px-4 font-kanit">
         <div class="flex items-center">
             <button @click="toggleSidebar"
-                class="lg:flex hidden items-center p-2 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                class="sm:flex hidden items-center p-2 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
                 <Icon height="24" icon="bi:list" width="24" />
             </button>
             <router-link to="/" class="flex items-center ml-3">
