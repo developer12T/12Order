@@ -147,8 +147,8 @@ const handleSelectedRows = (rows) => {
 const handleRowClicked = async (orderNo) => {
     console.log('Clicked:', orderNo)
     util.orderNo = orderNo;
-    await router.push('/order/detail')
-    order.getOrderCmDetail(orderNo)
+    await router.push('/cn/detail')
+    order.getCnOrderCmDetail(orderNo)
 }
 
 const handleConfirm1 = () => {
