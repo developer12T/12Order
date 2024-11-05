@@ -225,6 +225,7 @@ const handleAddErp = async () => {
                         qty: product.qty*-1, 
                         unit: product.unitText, 
                         price: product.pricePerQty, 
+                        discount: 0,
                         netPrice: product.pricePerQty,
                         total: product.amount*-1, 
                     }
