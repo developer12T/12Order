@@ -103,7 +103,7 @@ export const useCnStore = defineStore('cn', {
       this.error = null
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_ERP_BASE_URL + '/cn/createOrder',
+          import.meta.env.VITE_API_ERP_BASE_URL + '/cn/addOrderErp',
           {
             order
           }

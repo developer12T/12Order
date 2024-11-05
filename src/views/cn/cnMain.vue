@@ -186,7 +186,7 @@ const handleAdd = async () => {
         handleFail()
     } finally {
         isLoading.value = false
-        order.getOrderCm(status.value)
+        order.getCnOrderCm(status.value)
         resetSelected.value = true
         console.log('valueSelected', selectedRows.value)
     }
@@ -205,18 +205,18 @@ const handleAddErp = async () => {
             return {
                 Hcase: 1, 
                 orderNo: item.orderNo,
-                orderType: "M34",
+                orderType: 'M34',
                 orderStatusLow: 22,
                 orderStatusHigh: 22,
                 orderDate: formatDate(item.createDate), 
                 requestDate: formatDate(item.createDate),
                 customerNo: item.storeId, 
                 payer: item.payer,
-                addressID: "INVTSP", 
+                addressID: 'INVTSP', 
                 warehouse: item.warehouse,
                 total: item.totalAmount*-1,
                 totalNet: item.totalAmount*-1,
-                ref: `OD${item.orderNo}`,
+                ref: '',
                 note: item.note.substring(1, 30), 
                 item: item.list.map((product) => {
                     return {
@@ -225,10 +225,8 @@ const handleAddErp = async () => {
                         qty: product.qty*-1, 
                         unit: product.unitText, 
                         price: product.pricePerQty, 
-                        // discount: 0, 
                         netPrice: product.pricePerQty,
                         total: product.amount*-1, 
-                        // promotionCode: "" 
                     }
                 })
             }
