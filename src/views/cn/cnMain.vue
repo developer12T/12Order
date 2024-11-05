@@ -232,7 +232,7 @@ const handleAddErp = async () => {
             }
         })
         console.log('123',orders)
-        await order.addOrderERP(orders)
+        await order.addCnErp(orders)
 
         selectedRows.value = []
         handleSuccess();
