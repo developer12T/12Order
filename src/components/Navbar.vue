@@ -32,13 +32,18 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue';
-import { Icon } from '@iconify/vue';
+import { ref, inject, onMounted } from 'vue'
+import { Icon } from '@iconify/vue'
 
-const isUserMenuOpen = ref(false);
+const isUserMenuOpen = ref(false)
 const toggleUserMenu = () => {
-    isUserMenuOpen.value = !isUserMenuOpen.value;
+    isUserMenuOpen.value = !isUserMenuOpen.value
 };
 
-const toggleSidebar = inject('toggleSidebar');
+const toggleSidebar = inject('toggleSidebar')
+
+onMounted(() => {
+    if (toggleSidebar) toggleSidebar()
+})
+
 </script>

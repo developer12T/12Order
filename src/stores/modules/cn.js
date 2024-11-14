@@ -105,11 +105,40 @@ export const useCnStore = defineStore('cn', {
         const response = await axios.post(
           import.meta.env.VITE_API_ERP_BASE_URL + '/cn/addOrderErp',
           order
-          // {
-          //   order
-          // }
         )
         console.log('addCn', response.data)
+      } catch (error) {
+        this.error = error.message || 'Error fetching orders'
+        console.error(error)
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async updateqStatusOrder(order) {
+      this.isLoading = true
+      this.error = null
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_CMS_URL + '/cnOrder/UpdateCnOrder',
+          order
+        )
+        console.log('update', response.data)
+      } catch (error) {
+        this.error = error.message || 'Error fetching orders'
+        console.error(error)
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async updateqQtyOrder(order) {
+      this.isLoading = true
+      this.error = null
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_CMS_URL + '/cnOrder/UpdateQtyCnOrder',
+          order
+        )
+        console.log('update', response.data)
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
         console.error(error)

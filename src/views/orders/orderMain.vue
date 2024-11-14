@@ -10,22 +10,22 @@
                 <div>
                     <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummary(selectedRows)" type="button"
                         :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                    {
-                        'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                    }]">
+                            {
+                                'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                            }]">
                         ใบจอง
                         <span v-if="selectedRows.length"
                             class="inline-flex items-center justify-center min-w-[1.5rem] h-4 px-2 ms-1 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
                             {{ selectedRows.length }}
                         </span>
                     </button>
-                    <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummaryAll(selectedRows)" type="button"
-                        :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                    {
-                        'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                    }]">
+                    <button v-if="activeTab === 1 || activeTab === 2" @click="handleSummaryAll(selectedRows)"
+                        type="button" :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
+                            {
+                                'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                            }]">
                         ใบรวม
                         <span v-if="selectedRows.length"
                             class="inline-flex items-center justify-center min-w-[1.5rem] h-4 px-2 ms-1 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
@@ -34,17 +34,17 @@
                     </button>
                     <button v-if="activeTab === 0" @click="handleConfirm1(selectedRows)" type="button"
                         :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                    {
-                        'bg-blue-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                    }]"> เพิ่มรายการ
+                            {
+                                'bg-blue-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                            }]"> เพิ่มรายการ
                     </button>
                     <button v-if="activeTab === 1" @click="handleConfirm2(selectedRows)" type="button"
                         :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                    {
-                        'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                    }]"> เข้าระบบ
+                            {
+                                'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                            }]"> เข้าระบบ
                     </button>
                 </div>
             </template>
@@ -255,32 +255,32 @@ const handleAddErp = async () => {
     try {
         const orders = selectedRows.value.map((item) => {
             return {
-                Hcase: 1, 
+                Hcase: 1,
                 orderNo: item.orderNo,
                 orderType: "M31",
                 orderStatusLow: 22,
                 orderStatusHigh: 22,
-                orderDate: formatDate(item.createDate), 
+                orderDate: formatDate(item.createDate),
                 requestDate: formatDate(item.createDate),
-                customerNo: item.storeId, 
+                customerNo: item.storeId,
                 payer: item.payer,
-                addressID: "INVTSP", 
+                addressID: "INVTSP",
                 warehouse: item.warehouse,
                 total: item.totalPrice,
                 totalNet: item.totalPrice - item.totalDiscount,
                 OAFRE1: "YSEND",
                 ref: `OD${item.orderNo}`,
-                note: item.note.substring(1, 30), 
+                note: item.note.substring(1, 30),
                 item: item.list.map((product) => {
                     return {
                         itemCode: product.id,
-                        qty: product.qty, 
-                        unit: product.unitText, 
-                        price: product.pricePerQty, 
-                        discount: product.discount, 
+                        qty: product.qty,
+                        unit: product.unitText,
+                        price: product.pricePerQty,
+                        discount: product.discount,
                         netPrice: product.pricePerQty - product.discount,
-                        total: product.totalAmount, 
-                        promotionCode: product.proCode || "" 
+                        total: product.totalAmount,
+                        promotionCode: product.proCode || ""
                     };
                 })
             };
@@ -338,6 +338,7 @@ watchEffect(() => {
 watch(activeTab, async (newTab) => {
     loading.value = true;
     try {
+        util.searchText = ''
         switch (newTab) {
             case 0:
                 status.value = 10

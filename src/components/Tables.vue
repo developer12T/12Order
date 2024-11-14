@@ -1,6 +1,27 @@
 <template>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg max-h-[50vh] sm:max-h-[50vh] md:max-h-[60vh] lg:max-h-[70vh]">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+        <div v-if="loading" class="p-4">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-sm text-gray-700 uppercase bg-gray-50 sticky top-0 z-10">
+                    <tr>
+                        <th v-if="checkbox" scope="col" class="p-4 bg-gray-50">
+                        </th>
+                        <th v-for="(column, index) in columns" :key="index" class="px-6 py-3 bg-gray-50">
+                            {{ column.label }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="n in 5" :key="n">
+                        <td v-if="checkbox" class="w-4 p-4"></td>
+                        <td v-for="(column, index) in columns" :key="index" class="text-center py-2">
+                            <Skeleton width="70%" height="0.8rem" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <table v-else class="w-full text-sm text-left rtl:text-right text-gray-500">
             <thead class="text-sm text-gray-700 uppercase bg-gray-50 sticky top-0 z-10">
                 <tr>
                     <th v-if="checkbox" scope="col" class="p-4 bg-gray-50">
@@ -16,19 +37,14 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="overflow-y-auto">
-                <tr v-if="loading" v-for="n in 5" :key="n">
-                    <td v-if="checkbox" class="w-4 p-4"></td>
-                    <td v-for="(column, index) in columns" :key="index" class="text-center py-2">
-                        <Skeleton width="70%" height="0.8rem" />
-                    </td>
-                </tr>
-                <tr v-else-if="data.status === 204 || data.length === 0">
+            <tbody>
+                <tr v-if="data.status === 204 || data.length === 0">
                     <td :colspan="columns.length" class="text-center py-4 text-gray-500">
                         <span> ไม่มีข้อมูล </span>
                     </td>
                 </tr>
-                <tr v-else v-for="(row, index) in data" :key="index" class="bg-white border-b hover:bg-gray-50 cursor-pointer">
+                <tr v-else v-for="(row, index) in data" :key="index" :class="{ 'bg-blue-100': isSelected(row) }"
+                    class="bg-white border-b hover:bg-gray-50 cursor-pointer">
                     <td v-if="checkbox" class="w-4 p-4">
                         <div class="flex items-center">
                             <input :id="'checkbox-' + index" type="checkbox"
@@ -38,10 +54,15 @@
                         </div>
                     </td>
                     <td v-for="(column, colIndex) in columns" :key="colIndex" class="px-6 py-4"
-                        @click="rowClicked(row)">
-                        <slot name="cell" :column="column" :row="row">
-                            {{ row[column.key] }}
-                        </slot>
+                        @click="column.key !== 'button' && rowClicked(row)">
+                        <template v-if="column.key === 'actions'">
+                            <slot name="cell-actions" :row="row"></slot>
+                        </template>
+                        <template v-else>
+                            <slot name="cell" :column="column" :row="row">
+                                {{ row[column.key] }}
+                            </slot>
+                        </template>
                     </td>
                 </tr>
             </tbody>
@@ -81,7 +102,7 @@ const selectRow = (row) => {
     } else {
         selectedRows.value.push(row)
     }
-    emitSelectedRows();
+    emits('update:selected', selectedRows.value)
 };
 
 const isSelected = (row) => {
@@ -89,34 +110,12 @@ const isSelected = (row) => {
 };
 
 const selectAll = () => {
-    if (selectedAll.value) {
-        selectedRows.value = []
-    } else {
-        selectedRows.value = [...props.data]
-    }
     selectedAll.value = !selectedAll.value
-    emitSelectedRows()
-}
-
-const emitSelectedRows = () => {
+    selectedRows.value = selectedAll.value ? [...props.data] : []
     emits('update:selected', selectedRows.value)
 }
 
 const rowClicked = (row) => {
     emits('row:clicked', row.orderNo)
 }
-
-watch(selectedRows, (newVal) => {
-    selectedAll.value = newVal.length === props.data.length
-})
-
-watch(() => props.resetSelected, (newVal) => {
-    if (newVal) {
-        selectedRows.value = []
-        selectedAll.value = false
-        emitSelectedRows()
-    }
-})
-
-
 </script>

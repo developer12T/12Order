@@ -1,4 +1,5 @@
-import { defineStore } from 'pinia';
+import { defineStore } from 'pinia'
+import axios from 'axios'
 
 export const useUtilityStore = defineStore('utility', {
   state: () => ({
@@ -23,4 +24,17 @@ export const useUtilityStore = defineStore('utility', {
       );
     },
   },
+  actions: {
+    async insertLog(order) {
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_BASE_URL + '/log',
+          order
+        )
+        console.log('log', response.data)
+      } catch (error) {
+        console.error(error)
+      } 
+    }
+  }
 });

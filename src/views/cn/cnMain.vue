@@ -10,10 +10,10 @@
                 <div>
                     <button v-if="activeTab === 0" @click="handleSummary(selectedRows)" type="button"
                         :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                    {
-                        'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                    }]">
+                            {
+                                'bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                            }]">
                         ใบรับคืน
                         <span v-if="selectedRows.length"
                             class="inline-flex items-center justify-center min-w-[1.5rem] h-4 px-2 ms-1 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
@@ -22,17 +22,17 @@
                     </button>
                     <button v-if="activeTab === 0" @click="handleConfirm1(selectedRows)" type="button"
                         :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                    {
-                        'bg-blue-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                    }]"> เพิ่มรายการ
+                            {
+                                'bg-blue-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                            }]"> เพิ่มรายการ
                     </button>
                     <button v-if="activeTab === 1" @click="handleConfirm2(selectedRows)" type="button"
                         :disabled="!selectedRows.length" :class="['text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4',
-                    {
-                        'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
-                        'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
-                    }]"> เข้าระบบ
+                            {
+                                'bg-green-500 hover:bg-green-600 border-green-500 hover:green-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300': selectedRows.length,
+                                'bg-gray-400 border-gray-400 cursor-not-allowed': !selectedRows.length,
+                            }]"> เข้าระบบ
                     </button>
                 </div>
             </template>
@@ -51,35 +51,41 @@
                     cancelText="ยกเลิก" icon="line-md:downloading-loop" style="color: #787373" @confirm="handleAddErp"
                     @close="showConfirm2 = false" />
 
-                <Alert :isVisible="showSuccess" message="เพิ่มสำเร็จ" icon="ep:success-filled" style="color: #14c257"
+                <Alert :isVisible="showConfirm3" message="ต้องการยกเลิกรายการ?" confirmText="ยืนยัน" cancelText="ยกเลิก"
+                    icon="line-md:close-circle" style="color: #787373" @confirm="handleCancel"
+                    @close="showConfirm3 = false" />
+
+                <Alert :isVisible="showSuccess" message="สำเร็จ" icon="ep:success-filled" style="color: #14c257"
                     :confirmButton="false" :cancelButton="false" @close="showSuccess = false" />
 
                 <Alert :isVisible="showFail" message="เกิดข้อผิดพลาด" icon="line-md:alert-circle-loop"
                     style="color: #ba1212" :confirmButton="false" :cancelButton="false" @close="showFail = false" />
 
                 <div v-if="activeTab === 0">
-                    <Tables :columns="columns" :data="filteredCnData" @update:selected="handleSelectedRows"
+                    <Tables :columns="columns1" :data="filteredCnData" @update:selected="handleSelectedRows"
                         :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading">
-                        <!-- <template #cell="{ column, row }">
-                            <span v-if="column.key === 'send'">
-                                <span v-if="!row.send"
-                                    class="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">ไม่พร้อมส่ง</span>
-                                <span v-else
-                                    class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">พร้อมส่ง</span>
+                        <template #cell="{ column, row }">
+                            <span v-if="column.key === 'button'">
+                                <button @click="showConfirm3 = true; buttonCancel = row" type="button"
+                                    class="bg-red-500 hover:bg-red-600 border-red-500 hover:border-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 text-white border font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-4">
+                                    ยกเลิก
+                                </button>
                             </span>
-                            <span v-else>
-                                {{ row[column.key] }}
-                            </span>
-                        </template> -->
+                        </template>
                     </Tables>
                 </div>
                 <div v-if="activeTab === 1">
-                    <Tables :columns="columns" :data="filteredCnData" @update:selected="handleSelectedRows"
+                    <Tables :columns="columns2" :data="filteredCnData" @update:selected="handleSelectedRows"
                         :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
                 </div>
                 <div v-if="activeTab === 2">
-                    <Tables :columns="columns" :data="filteredCnData" @update:selected="handleSelectedRows"
+                    <Tables :columns="columns2" :data="filteredCnData" @update:selected="handleSelectedRows"
                         :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading" />
+                </div>
+                <div v-if="activeTab === 3">
+                    <Tables :columns="columns2" :data="filteredCnData" @update:selected="handleSelectedRows"
+                        :resetSelected="resetSelected" @row:clicked="handleRowClicked" :loading="loading"
+                        :checkbox="false" />
                 </div>
             </template>
         </Tabs>
@@ -97,27 +103,30 @@ import Search from '../../components/Search.vue'
 import Alert from '../../components/Alert.vue'
 
 const router = useRouter()
-const order = useCnStore()
+const cn = useCnStore()
 const util = useUtilityStore()
 
-const cnData = computed(() => order.orderCnCm)
+const cnData = computed(() => cn.orderCnCm)
 const filteredCnData = computed(() => util.filteredData)
 
 const activeTab = ref(0)
 const status = ref(10)
 const showConfirm1 = ref(false)
 const showConfirm2 = ref(false)
+const showConfirm3 = ref(false)
 const showSuccess = ref(false)
 const showFail = ref(false)
 const selectedRows = ref([])
 const isLoading = ref(false)
 const loading = ref(true)
 const resetSelected = ref(false)
+const buttonCancel = ref(null)
 
 const tabs = ref([
     { name: 'รายการขาย', status: '10' },
     { name: 'รอเข้าระบบ', status: '15' },
-    { name: 'ประวัติ', status: '20' }
+    { name: 'ประวัติ', status: '20' },
+    { name: 'ยกเลิก', status: '91' }
 ])
 
 const tabsWithCounts = computed(() => {
@@ -130,7 +139,17 @@ const tabsWithCounts = computed(() => {
     })
 })
 
-const columns = ref([
+const columns1 = ref([
+    { key: 'createDate', label: 'วันที่' },
+    { key: 'orderNo', label: 'บิล' },
+    { key: 'storeName', label: 'ร้าน' },
+    { key: 'address', label: 'ที่อยู่' },
+    { key: 'area', label: 'เขต' },
+    { key: 'totalAmount', label: 'รวม' },
+    { key: 'button', label: '' }
+])
+
+const columns2 = ref([
     { key: 'createDate', label: 'วันที่' },
     { key: 'orderNo', label: 'บิล' },
     { key: 'storeName', label: 'ร้าน' },
@@ -146,9 +165,9 @@ const handleSelectedRows = (rows) => {
 
 const handleRowClicked = async (orderNo) => {
     console.log('Clicked:', orderNo)
-    util.orderNo = orderNo;
+    util.cnNo = orderNo;
     await router.push('/cn/detail')
-    order.getCnOrderCmDetail(orderNo)
+    cn.getCnOrderCmDetail(orderNo)
 }
 
 const handleConfirm1 = () => {
@@ -175,18 +194,18 @@ const handleAdd = async () => {
     showConfirm1.value = false
     isLoading.value = true
     try {
-        await order.addCnOrder(
+        await cn.addCnOrder(
             selectedRows.value
         )
         selectedRows.value = []
-        console.log('add', selectedRows.value)
+        // console.log('add', selectedRows.value)
         handleSuccess()
     } catch (error) {
         console.error(error)
         handleFail()
     } finally {
         isLoading.value = false
-        order.getCnOrderCm(status.value)
+        cn.getCnOrderCm(status.value)
         resetSelected.value = true
         console.log('valueSelected', selectedRows.value)
     }
@@ -203,48 +222,48 @@ const handleAddErp = async () => {
     try {
         const orders = selectedRows.value.map((item) => {
             return {
-                Hcase: 1, 
+                Hcase: 1,
                 orderNo: item.orderNo,
                 orderType: 'M34',
                 orderStatusLow: 22,
                 orderStatusHigh: 22,
-                orderDate: formatDate(item.createDate), 
+                orderDate: formatDate(item.createDate),
                 requestDate: formatDate(item.createDate),
-                customerNo: item.storeId, 
+                customerNo: item.storeId,
                 payer: item.payer,
-                addressID: 'INVTSP', 
+                addressID: 'INVTSP',
                 warehouse: item.warehouse,
-                total: item.totalAmount*-1,
-                totalNet: item.totalAmount*-1,
+                total: item.totalAmount * -1,
+                totalNet: item.totalAmount * -1,
                 ref: '',
-                note: item.note.substring(1, 30), 
+                note: item.note.substring(1, 30),
                 item: item.list.map((product) => {
                     return {
                         itemCode: product.id,
                         itemLot: product.lot,
-                        qty: product.qty*-1, 
-                        unit: product.unitText, 
-                        price: product.pricePerQty, 
+                        qty: product.qty * -1,
+                        unit: product.unitText,
+                        price: product.pricePerQty,
                         discount: 0,
                         netPrice: product.pricePerQty,
-                        total: product.amount*-1, 
+                        total: product.amount * -1,
                     }
                 })
             }
         })
-        console.log('123',orders)
-        await order.addCnErp(orders)
+        // console.log('123', orders)
+        await cn.addCnErp(orders)
 
         selectedRows.value = []
-        handleSuccess();
+        handleSuccess()
     } catch (error) {
-        console.error(error);
-        handleFail();
+        console.error(error)
+        handleFail()
     } finally {
-        isLoading.value = false;
-        order.getCnOrderCm(status.value);
-        resetSelected.value = true;
-        console.log('valueSelected', selectedRows.value);
+        isLoading.value = false
+        cn.getCnOrderCm(status.value)
+        resetSelected.value = true
+        console.log('valueSelected', selectedRows.value)
     }
 }
 
@@ -252,13 +271,35 @@ const handleSummary = async () => {
     isLoading.value = true
     try {
         util.summary = selectedRows.value
-        await order.summaryOrder(selectedRows.value)
-        console.log(util.summary)
+        await cn.summaryOrder(selectedRows.value)
+        // console.log(util.summary)
     } catch (error) {
         console.error(error)
     } finally {
         isLoading.value = false
         await router.push('/cn/summary')
+    }
+}
+
+const handleCancel = async () => {
+    showConfirm3.value = false
+    isLoading.value = true
+    const dataOrder = {
+        order: buttonCancel.value.orderNo,
+        status: "91"
+    }
+    try {
+        await cn.updateqStatusOrder(
+            dataOrder
+        )
+        handleSuccess()
+    } catch (error) {
+        console.error(error)
+        handleFail()
+    } finally {
+        isLoading.value = false
+        cn.getCnOrderCm(status.value)
+        buttonCancel.value = null
     }
 }
 
@@ -271,6 +312,7 @@ watchEffect(() => {
 watch(activeTab, async (newTab) => {
     loading.value = true;
     try {
+        util.searchText = ''
         switch (newTab) {
             case 0:
                 status.value = 10
@@ -281,10 +323,13 @@ watch(activeTab, async (newTab) => {
             case 2:
                 status.value = 20
                 break
+            case 3:
+                status.value = 91
+                break
             default:
                 status.value = 10
         }
-        await order.getCnOrderCm(status.value)
+        await cn.getCnOrderCm(status.value)
     } catch (error) {
         console.error("Error fetching data:", error)
         handleFail()
@@ -300,9 +345,9 @@ watch(cnData, (newData) => {
 onMounted(async () => {
     loading.value = true
     try {
-        await order.getCnOrderCm(status.value)
+        await cn.getCnOrderCm(status.value)
         util.searchData = cnData.value
-        console.log('orderData', cnData.value);
+        // console.log('orderData', cnData.value)
     } catch (error) {
         console.error("Error on mounted:", error)
         handleFail()
