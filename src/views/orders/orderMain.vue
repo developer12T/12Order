@@ -277,8 +277,8 @@ const handleAddErp = async () => {
                         qty: product.qty,
                         unit: product.unitText,
                         price: product.pricePerQty,
-                        discount: product.discount,
-                        netPrice: product.pricePerQty - product.discount,
+                        discount: product.totalDiscount,
+                        netPrice: product.totalAmount,
                         total: product.totalAmount,
                         promotionCode: product.proCode || ""
                     };
